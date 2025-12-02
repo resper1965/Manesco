@@ -3,169 +3,282 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut, ShieldCheck, AlertTriangle, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BrandWordmark } from '@/components/ui/brand-dot'
 
-// Slides data
+// Components
+import { CISControlsTable } from '@/components/presentation/cis-controls-table'
+import { MaturityRadar } from '@/components/presentation/maturity-radar'
+import { EvolutionTimeline } from '@/components/presentation/evolution-timeline'
+import { VulnerabilityEvolutionChart } from '@/components/presentation/vulnerability-chart'
+import { PentestGrid } from '@/components/presentation/pentest-grid'
+import { TaskStatusGrid } from '@/components/presentation/task-status-grid'
+import { SectionDivider } from '@/components/presentation/section-divider'
+
+// Data
+import {
+  cisControls,
+  workedControls,
+  currentMaturity,
+  vulnerabilityEvolution,
+  totalVulnerabilitiesTrend,
+  pentestApplications,
+  pontosAtencao,
+  tarefasPorStatus,
+  implementationEvolution,
+  maturityEvolution,
+  statusVsReference
+} from '@/lib/presentation-data'
+
+// Slides Configuration
 const slides = [
+  // SLIDE 1: Capa
   {
     type: 'title',
-    title: 'Governança de Segurança',
+    title: 'Governança de Segurança da Informação',
     subtitle: 'Status de Implementação | Manesco | Novembro 2025',
-    speakerNotes: 'Bem-vindo. Vamos revisar onde chegamos e para onde vamos.',
+    speakerNotes: 'Bem-vindos. Hoje apresentaremos o status atual da governança de segurança, seguindo o framework CIS Controls IG2.',
   },
+
+  // SLIDE 2: Intro
   {
     type: 'content',
-    title: 'O que implementamos',
+    title: 'Agenda',
     items: [
-      '✓ Framework CIS Controls IG2 estabelecido e operando',
-      '✓ SIEM em operação (correlacionador de logs)',
-      '✓ Scans de vulnerabilidades regulares (15 servidores, 151 estações)',
-      '✓ Pentestes automatizados em 8 aplicações corporativas',
-      '✓ 9 controles CIS sendo gerenciados ativamente',
+      '• Framework CIS Controls e Grupos de Implementação',
+      '• Status da Aderência ao IG2',
+      '• Gestão de Vulnerabilidades e Pentests',
+      '• Status das Tarefas Prioritárias',
+      '• Pontos de Atenção e Próximos Passos'
     ],
-    speakerNotes: 'Muito foi feito. Precisamos validar que continua. Pergunte: Vocês concordam com isto?',
+    speakerNotes: 'Nossa agenda cobre desde a metodologia até os resultados práticos e próximos passos.',
   },
-  {
-    type: 'metrics',
-    title: 'Status Atual',
-    metrics: [
-      { label: 'Cobertura CIS IG2', value: '45%', desc: 'Do padrão IG2' },
-      { label: 'Servidores/Estações', value: '166', desc: 'Sob monitoramento' },
-      { label: 'Controles Ativos', value: '9/18', desc: 'Em implementação' },
-      { label: 'SIEM Status', value: 'Operando', desc: 'Nível: Repetitivo' },
-    ],
-    speakerNotes: 'Deixe silêncio após "45%". Deixe perguntar.',
-  },
+
+  // SLIDE 3: Conceito CIS
   {
     type: 'content',
-    title: 'Oportunidade de Evolução',
+    title: 'Framework CIS Controls',
     items: [
-      '• Maturidade está em nível "Repetitivo" - próximo passo: "Definido"',
-      '• Processos existem mas não estão formalizados/publicados',
-      '• Resposta a incidentes ainda é reativa (4-8 horas)',
-      '• Automação atual é limitada - muitas tarefas manuais',
-      '• Comitê de Segurança não formalizado',
-    ],
-    speakerNotes: 'Tone neutro. Não é crítica, é observação. "Próximo nível natural é isto"',
-  },
-  {
-    type: 'split',
-    title: 'Próximo Nível de Maturidade',
-    left: [
-      { label: 'Hoje', status: 'Repetitivo', desc: 'Processos existem, executados manualmente' },
-    ],
-    right: [
-      'Formalizar processos',
-      'Automação de tarefas repetitivas',
-      'Resposta a incidentes < 30min',
-      'Formalizar Comitê',
-      'Reduzir falsos positivos',
-      'Dashboard executivo',
-    ],
-    speakerNotes: 'MOMENTO CRÍTICO! Pergunte: "Vocês concordam que o próximo nível é isto?" Se SIM → continue. Se NÃO → ajuste.',
-  },
-  {
-    type: 'content',
-    title: 'n.secops: Caminho para "Definido"',
-    items: [
-      'Serviço gerenciado que torna segurança operação contínua.',
+      'O CIS Controls é um conjunto de práticas recomendadas para defesa cibernética.',
       '',
-      'O que muda:',
-      '✓ Plataforma de compliance com CIS integrado',
-      '✓ Automação de 80%+ das tarefas manuais',
-      '✓ SOC 24x7 dedicado à Manesco',
-      '✓ Resposta a incidentes em minutos, não horas',
-      '✓ Formalização automática de processos',
+      'Grupos de Implementação (IGs):',
+      '• IG1: Higiene básica cibernética (Pequenas/Médias empresas)',
+      '• IG2: Organizações com dados sensíveis e infraestrutura complexa',
+      '• IG3: Organizações com alta criticidade (Alvos sofisticados)',
     ],
-    speakerNotes: 'Não é produto, é continuidade. "Há formas de acelerar isto".',
+    speakerNotes: 'O CIS é o padrão ouro. O IG2 é o nível adequado para a complexidade e responsabilidade da Manesco.',
   },
-  {
-    type: 'metrics',
-    title: 'Impacto Esperado (12 meses)',
-    metrics: [
-      { label: 'Cobertura CIS', value: '45% → 95%', desc: 'em 90 dias' },
-      { label: 'Tempo Resposta', value: '4-8h → 15min', desc: 'Incidentes críticos' },
-      { label: 'Automação', value: '20% → 85%', desc: 'Tarefas processadas' },
-      { label: 'FTE Liberado', value: '~2 pessoas', desc: 'Tarefas estratégicas' },
-    ],
-    speakerNotes: 'Deixe números falarem. 3 segundos de silêncio após cada métrica.',
-  },
-  {
-    type: 'timeline',
-    title: 'Timeline: 6 Meses',
-    phases: [
-      { period: 'Semanas 1-4', phase: 'Discovery & Baseline', detail: 'Avaliação técnica, relatório' },
-      { period: 'Semanas 5-12', phase: 'Implementação Core', detail: 'Plataforma, SIEM, automações' },
-      { period: 'Semanas 13-20', phase: 'Governança & Otimização', detail: 'Comitê formal, SOAR' },
-      { period: 'Semana 24+', phase: 'Operação Contínua', detail: 'SOC 24x7 gerenciado' },
-    ],
-    speakerNotes: 'Tone: "É estruturado, não é improviso"',
-  },
+
+  // SLIDE 4: Contexto Manesco
   {
     type: 'content',
-    title: 'Investimento & Retorno',
+    title: 'Por que IG2 para Manesco?',
     items: [
-      'Modelo SaaS + Serviços Profissionais',
+      '• Infraestrutura de TI desenvolvida',
+      '• Necessidade de proteção de dados sensíveis',
+      '• Requisito de monitoramento contínuo',
+      '• Controle de acessos avançado',
       '',
-      'Investimento: [A CUSTOMIZAR PÓS DISCOVERY]',
-      '  • Implementação (6 meses): one-time',
-      '  • Plataforma + SOC: mensal',
-      '',
-      'Retorno: Payback em 6-9 meses',
-      '  • Apenas com economia de FTEs',
-      '  • ROI adicional em redução de riscos',
+      'O IG2 estabelece uma base sólida de segurança e governança.',
     ],
-    speakerNotes: '[Se perguntarem números] Customizamos após discovery. Payback é 6-9 meses. [Detalhar em 1:1 com CFO]',
+    speakerNotes: 'Escolhemos o IG2 pois ele equilibra proteção robusta com viabilidade operacional para o perfil da Manesco.',
+  },
+
+  // SLIDE 5: Tabela Controles
+  {
+    type: 'cis-table',
+    title: 'Escopo CIS v8 - IG2',
+    subtitle: '18 Controles de Segurança',
+    data: cisControls,
+    speakerNotes: 'Estes são os 18 controles que compõem o framework. Estamos trabalhando ativamente em 8 deles.',
+  },
+
+  // SLIDE 6: Divisor
+  {
+    type: 'divider',
+    title: 'Evolução dos Controles',
+    subtitle: 'Status Atual e Comparativos',
+  },
+
+  // SLIDE 7: Status vs Referência
+  {
+    type: 'chart-bar',
+    title: 'Status Atual vs Referência',
+    data: statusVsReference,
+    speakerNotes: 'Ainda temos um gap em relação à referência ideal do IG2, mas o progresso é consistente.',
+  },
+
+  // SLIDE 8: Evolução Temporal
+  {
+    type: 'chart-line',
+    title: 'Evolução da Implantação',
+    subtitle: 'Aderência Geral ao IG2 (Mai/25 - Nov/25)',
+    data: implementationEvolution,
+    lines: [{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }],
+    speakerNotes: 'Crescemos de 15% para 45% de aderência geral em 6 meses.',
+  },
+
+  // SLIDE 9: Controles Trabalhados
+  {
+    type: 'cis-table',
+    title: 'Controles Trabalhados',
+    subtitle: 'Foco atual da equipe de segurança',
+    data: workedControls,
+    speakerNotes: 'Estamos priorizando estes 8 controles que trazem maior redução de risco imediato.',
+  },
+
+  // SLIDE 10: Evolução Trabalhados
+  {
+    type: 'chart-line',
+    title: 'Evolução - Controles Trabalhados',
+    subtitle: 'Progresso específico nos controles prioritários',
+    data: implementationEvolution,
+    lines: [{ dataKey: 'trabalhados', name: 'Controles Trabalhados (%)', color: '#22c55e' }],
+    speakerNotes: 'Nos controles prioritários, nossa evolução é ainda mais expressiva, chegando a 82%.',
+  },
+
+  // SLIDE 11: Radar Maturidade
+  {
+    type: 'radar',
+    title: 'Maturidade Atual por Controle',
+    data: currentMaturity.map(m => {
+      const control = cisControls.find(c => c.id === m.controleId)
+      return {
+        controle: `CIS ${m.controleId}`,
+        nivel: m.nivel === 'Inicial' ? 1 : m.nivel === 'Repetitivo' ? 2 : m.nivel === 'Definido' ? 3 : 4,
+        nivelTexto: m.nivel
+      }
+    }),
+    speakerNotes: 'A maioria dos controles está no nível "Repetitivo". O objetivo é chegar em "Definido" com a formalização.',
+  },
+
+  // SLIDE 12: Evolução Maturidade
+  {
+    type: 'chart-line',
+    title: 'Evolução da Maturidade',
+    subtitle: 'Nível médio (1=Inicial, 2=Repetitivo, 3=Definido)',
+    data: maturityEvolution,
+    lines: [{ dataKey: 'nivel', name: 'Nível Médio', color: '#f59e0b' }],
+    yAxisLabel: 'Nível de Maturidade',
+    speakerNotes: 'A maturidade evolui mais lentamente que a implantação técnica, pois depende de processos e pessoas.',
+  },
+
+  // SLIDE 13: Divisor Vulnerabilidades
+  {
+    type: 'divider',
+    title: 'Gestão de Vulnerabilidades',
+    subtitle: 'Scans, Análises e Correções',
+  },
+
+  // SLIDE 14: Vuln Mensal
+  {
+    type: 'vuln-chart',
+    title: 'Vulnerabilidades: Novas vs Tratadas',
+    subtitle: 'Evolução mensal (Servidores e Estações)',
+    data: vulnerabilityEvolution,
+    speakerNotes: 'Tivemos um pico em Setembro com a retomada dos scans, mas a capacidade de tratamento (linha verde) está acompanhando.',
+  },
+
+  // SLIDE 15: Vuln Total
+  {
+    type: 'vuln-trend', // Reusing vuln chart for trend or creating specific view
+    title: 'Total de Vulnerabilidades Ativas',
+    subtitle: 'Tendência de redução do backlog',
+    data: totalVulnerabilitiesTrend.map(t => ({
+      mes: t.periodo,
+      total: t.total,
+      novas: t.criticas + t.altas, // Proxy visualization
+      tratadas: 0
+    })),
+    speakerNotes: 'O backlog total está caindo, indicando que estamos corrigindo mais rápido do que novas falhas aparecem.',
+  },
+
+  // SLIDE 16: Pentest Grid
+  {
+    type: 'pentest',
+    title: 'Pentests em Aplicações',
+    subtitle: 'Resultados da avaliação automatizada (Out/25)',
+    data: pentestApplications,
+    speakerNotes: 'Avaliamos 8 aplicações críticas. A maioria apresenta riscos baixos/médios, com poucos pontos críticos pontuais.',
+  },
+
+  // SLIDE 17: Divisor Tarefas
+  {
+    type: 'divider',
+    title: 'Status das Tarefas',
+    subtitle: 'Acompanhamento do Plano de Ação',
+  },
+
+  // SLIDE 18-23: Tarefas (Divided by status/priority logic for presentation flow)
+  {
+    type: 'tasks',
+    title: 'Tarefas Concluídas (High Impact)',
+    tasks: tarefasPorStatus.concluidas,
+    speakerNotes: 'Entregas importantes: SIEM, Scans Automáticos e Hardening de servidores.',
   },
   {
-    type: 'content',
-    title: 'Por que Executar com ness.',
-    items: [
-      '✓ 34 anos em segurança cibernética',
-      '✓ Experiência em healthcare (mesma complexidade)',
-      '✓ Plataforma n.secops desenvolvida para mercado BR',
-      '✓ Abordagem advisory + operacional',
-      '✓ Suporte SLA 24x7 garantido',
-    ],
-    speakerNotes: 'Credibilidade, não pitch. Foque em track record.',
+    type: 'tasks',
+    title: 'Tarefas em Andamento (1/2)',
+    tasks: tarefasPorStatus.emAndamento.slice(0, 3),
+    speakerNotes: 'Estamos focados agora na classificação de dados e proteção de rede.',
   },
   {
-    type: 'content',
-    title: 'Próximos Passos',
-    items: [
-      '1. Alinhamento de visão (workshop 1 dia)',
-      '2. Avaliação técnica (2-3 semanas)',
-      '3. Proposta customizada',
-      '4. Kickoff do projeto',
-    ],
-    speakerNotes: '"Se vocês têm interesse em explorar isto..." Isto é CONVITE, não imposição.',
+    type: 'tasks',
+    title: 'Tarefas em Andamento (2/2)',
+    tasks: tarefasPorStatus.emAndamento.slice(3),
+    speakerNotes: 'Também avançando em sandbox de e-mail e testes de restore.',
   },
+  {
+    type: 'tasks',
+    title: 'Tarefas Pendentes / Próximos Passos',
+    tasks: tarefasPorStatus.pendentes,
+    speakerNotes: 'O próximo ciclo focará fortemente em conscientização e resposta a incidentes.',
+  },
+
+  // SLIDE 24: Divisor Pontos Atenção
+  {
+    type: 'divider',
+    title: 'Pontos de Atenção',
+    subtitle: 'Riscos e Impedimentos',
+  },
+
+  // SLIDE 25: Lista Pontos Atenção
+  {
+    type: 'content',
+    title: 'Principais Pontos de Atenção',
+    items: pontosAtencao.map(p => `• ${p.titulo}: ${p.descricao}`),
+    speakerNotes: 'A formalização dos processos é o nosso maior gargalo para subir de nível de maturidade.',
+  },
+
+  // SLIDE 26: Contato
   {
     type: 'contact',
     name: 'Mônica Yoshida',
     title: 'ness.',
     email: 'myoshida@ness.com.br',
     phone: '+55 11 2504-7650',
-    speakerNotes: 'Deixe contato na tela. Agradeça. "Alguma pergunta?"',
+    speakerNotes: 'Obrigado. Dúvidas?',
   },
 ]
 
-// Componentes da apresentação
+// --- Componentes de Slide ---
+
 function TitleSlide({ data }: any) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center h-screen gap-8 px-4"
+      className="flex flex-col items-center justify-center h-screen gap-8 px-4 relative overflow-hidden"
     >
-      <div className="space-y-6 text-center max-w-4xl">
+      <div className="absolute inset-0 bg-gradient-primary opacity-5" />
+      <div className="space-y-6 text-center max-w-4xl z-10">
         <h1 className="text-6xl md:text-7xl font-light text-slate-100 leading-tight tracking-tight">
           {data.title}
         </h1>
-        <p className="text-xl md:text-2xl text-slate-300 font-light">
+        <div className="h-1 w-32 bg-blue-500 mx-auto rounded-full" />
+        <p className="text-xl md:text-2xl text-slate-400 font-light">
           {data.subtitle}
         </p>
       </div>
@@ -174,212 +287,101 @@ function TitleSlide({ data }: any) {
 }
 
 function ContentSlide({ data }: any) {
-  // Verifica se o título contém marca (ness., n.secops, etc.)
-  const hasBrand = data.title.includes('ness.') || data.title.includes('n.secops')
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-12"
+      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-16"
     >
-      <h2 className={`text-4xl md:text-5xl font-light text-slate-100 ${hasBrand ? 'font-montserrat font-medium' : ''}`}>
-        {hasBrand && data.title.includes('n.secops') ? (
-          <>
-            n<span className="text-[#00ade8]">.</span>secops{data.title.split('n.secops')[1]}
-          </>
-        ) : hasBrand && data.title.includes('ness.') ? (
-          <>
-            ness<span className="text-[#00ade8]">.</span>{data.title.split('ness.')[1]}
-          </>
-        ) : (
-          data.title
-        )}
-      </h2>
-      <div className="flex-1 space-y-6 overflow-y-auto pr-4">
-        {data.items.map((item: string, i: number) => {
-          // Substitui referências de marca no conteúdo
-          let content = item
-          if (item.includes('n.secops') || item.includes('N.SecOps')) {
-            content = item.replace(/n\.secops/gi, 'n.secops')
-          }
-          if (item.includes('NESS') || item.includes('ness.')) {
-            content = item.replace(/NESS/gi, 'ness.')
-          }
-          
-          return (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className={`text-lg md:text-xl leading-relaxed ${
-                item.includes('✓')
-                  ? 'text-slate-200 font-medium'
-                  : item === ''
-                  ? 'h-2'
-                  : 'text-slate-300'
-              }`}
-            >
-              {content.includes('n.secops') ? (
-                <>
-                  {content.split('n.secops').map((part, idx, arr) => (
-                    <span key={idx}>
-                      {part}
-                      {idx < arr.length - 1 && (
-                        <>
-                          n<span className="text-[#00ade8]">.</span>secops
-                        </>
-                      )}
-                    </span>
-                  ))}
-                </>
-              ) : content.includes('ness.') ? (
-                <>
-                  {content.split('ness.').map((part, idx, arr) => (
-                    <span key={idx}>
-                      {part}
-                      {idx < arr.length - 1 && (
-                        <span className="font-montserrat font-medium">
-                          ness<span className="text-[#00ade8]">.</span>
-                        </span>
-                      )}
-                    </span>
-                  ))}
-                </>
-              ) : (
-                content
-              )}
-            </motion.p>
-          )
-        })}
-      </div>
-    </motion.div>
-  )
-}
-
-function MetricsSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-12"
-    >
-      <h2 className="text-4xl md:text-5xl font-light text-slate-100">
+      <h2 className="text-4xl md:text-5xl font-light text-slate-100 border-l-4 border-blue-500 pl-6">
         {data.title}
       </h2>
-      <div className="flex-1 grid md:grid-cols-2 gap-6">
-        {data.metrics.map((metric: any, i: number) => (
-          <motion.div
+      <div className="flex-1 space-y-6 overflow-y-auto pr-4 mt-8">
+        {data.items.map((item: string, i: number) => (
+          <motion.p
             key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-slate-850 border border-slate-800/50 rounded-2xl p-8 space-y-4 backdrop-blur-sm"
-          >
-            <div className="text-4xl md:text-5xl font-bold text-blue-500">
-              {metric.value}
-            </div>
-            <div className="text-lg font-medium text-slate-300">
-              {metric.label}
-            </div>
-            <div className="text-sm text-slate-400">
-              {metric.desc}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  )
-}
-
-function SplitSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-12"
-    >
-      <h2 className="text-4xl md:text-5xl font-light text-slate-100">
-        {data.title}
-      </h2>
-      <div className="flex-1 grid md:grid-cols-2 gap-8">
-        {/* Left */}
-        <div className="space-y-4">
-          {data.left.map((item: any, i: number) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-slate-850 rounded-xl p-6 space-y-2"
-            >
-              <div className="text-sm uppercase tracking-wider text-slate-400">
-                {item.label}
-              </div>
-              <div className="text-2xl font-medium text-blue-500">
-                {item.status}
-              </div>
-              <div className="text-slate-300 text-sm leading-relaxed">
-                {item.desc}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        {/* Right */}
-        <div className="space-y-4">
-          {data.right.map((item: string, i: number) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (data.left.length + i) * 0.1 }}
-              className="text-lg text-slate-300 flex items-start gap-3"
-            >
-              <span className="text-blue-500 mt-1">•</span>
-              <span>{item}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-function TimelineSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-12"
-    >
-      <h2 className="text-4xl md:text-5xl font-light text-slate-100">
-        {data.title}
-      </h2>
-      <div className="flex-1 space-y-5 overflow-y-auto pr-4">
-        {data.phases.map((phase: any, i: number) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.15 }}
-            className="border-l-4 border-blue-500 pl-6 space-y-2"
+            transition={{ delay: i * 0.1 }}
+            className={`text-xl leading-relaxed ${item.startsWith('•') ? 'text-slate-300 pl-4' :
+                item === '' ? 'h-4' :
+                  'text-slate-200 font-medium'
+              }`}
           >
-            <div className="text-lg font-medium text-blue-400">
-              {phase.period}
-            </div>
-            <div className="text-xl text-slate-100 font-medium">
-              {phase.phase}
-            </div>
-            <div className="text-slate-400 text-sm">
-              {phase.detail}
-            </div>
-          </motion.div>
+            {item}
+          </motion.p>
         ))}
+      </div>
+    </motion.div>
+  )
+}
+
+function TableSlide({ data }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+    >
+      <div className="space-y-2">
+        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+          {data.title}
+        </h2>
+        {data.subtitle && (
+          <p className="text-slate-400 text-lg">{data.subtitle}</p>
+        )}
+      </div>
+      <div className="flex-1 overflow-hidden bg-slate-900/50 rounded-2xl border border-slate-800 p-1">
+        <CISControlsTable controls={data.data} />
+      </div>
+    </motion.div>
+  )
+}
+
+function ChartSlide({ data, type }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+    >
+      <div className="space-y-2">
+        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+          {data.title}
+        </h2>
+        {data.subtitle && (
+          <p className="text-slate-400 text-lg">{data.subtitle}</p>
+        )}
+      </div>
+      <div className="flex-1 bg-slate-850/50 rounded-2xl border border-slate-800 p-6 backdrop-blur-sm">
+        {type === 'radar' && <MaturityRadar data={data.data} />}
+        {type === 'chart-line' && <EvolutionTimeline data={data.data} lines={data.lines} yAxisLabel={data.yAxisLabel} />}
+        {type === 'vuln-chart' && <VulnerabilityEvolutionChart data={data.data} />}
+        {type === 'vuln-trend' && <VulnerabilityEvolutionChart data={data.data} />}
+      </div>
+    </motion.div>
+  )
+}
+
+function GridSlide({ data, type }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+    >
+      <div className="space-y-2">
+        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+          {data.title}
+        </h2>
+      </div>
+      <div className="flex-1 overflow-y-auto pr-2">
+        {type === 'pentest' && <PentestGrid applications={data.data} />}
+        {type === 'tasks' && <TaskStatusGrid tasks={data.tasks} />}
       </div>
     </motion.div>
   )
@@ -391,45 +393,58 @@ function ContactSlide({ data }: any) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center h-screen gap-12 px-4"
+      className="flex flex-col items-center justify-center h-screen gap-12 px-4 relative"
     >
-      <div className="space-y-8 text-center">
-        <h2 className="text-4xl md:text-5xl font-light text-slate-100">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 to-slate-900" />
+
+      <div className="z-10 text-center space-y-8">
+        <h2 className="text-5xl md:text-6xl font-light text-slate-100">
           {data.name}
         </h2>
-        <div className="space-y-3">
-          <p className="text-xl text-blue-500 font-montserrat font-medium">
+        <div className="space-y-4">
+          <p className="text-3xl text-blue-500 font-montserrat font-medium">
             <BrandWordmark word={data.title.replace('.', '')} />
           </p>
-          <p className="text-lg text-slate-300">{data.email}</p>
-          <p className="text-lg text-slate-300">{data.phone}</p>
+          <div className="h-px w-24 bg-slate-700 mx-auto" />
+          <p className="text-xl text-slate-300">{data.email}</p>
+          <p className="text-xl text-slate-300">{data.phone}</p>
         </div>
       </div>
     </motion.div>
   )
 }
 
-// Renderizador de slide
+// Renderizador Principal
 function SlideRenderer({ slide }: { slide: any }) {
   switch (slide.type) {
     case 'title':
       return <TitleSlide data={slide} />
     case 'content':
       return <ContentSlide data={slide} />
-    case 'metrics':
-      return <MetricsSlide data={slide} />
-    case 'split':
-      return <SplitSlide data={slide} />
-    case 'timeline':
-      return <TimelineSlide data={slide} />
+    case 'cis-table':
+      return <TableSlide data={slide} />
+    case 'divider':
+      return <SectionDivider title={slide.title} subtitle={slide.subtitle} />
+    case 'radar':
+    case 'chart-line':
+    case 'vuln-chart':
+    case 'vuln-trend':
+      return <ChartSlide data={slide} type={slide.type} />
+    case 'pentest':
+    case 'tasks':
+      return <GridSlide data={slide} type={slide.type} />
     case 'contact':
       return <ContactSlide data={slide} />
     default:
-      return null
+      return (
+        <div className="flex items-center justify-center h-screen text-slate-500">
+          Slide type not supported: {slide.type}
+        </div>
+      )
   }
 }
 
-// Componente principal
+// Componente Principal da Página
 export default function Presentation() {
   const [current, setCurrent] = useState(0)
   const [showNotes, setShowNotes] = useState(true)
@@ -457,18 +472,13 @@ export default function Presentation() {
     }
   }
 
-  // Controle por teclado
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') {
-        if (current < slides.length - 1) {
-          setCurrent(current + 1)
-        }
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        if (current < slides.length - 1) setCurrent(current + 1)
       }
       if (e.key === 'ArrowLeft') {
-        if (current > 0) {
-          setCurrent(current - 1)
-        }
+        if (current > 0) setCurrent(current - 1)
       }
       if (e.key === 'n') {
         setShowNotes((prev) => !prev)
@@ -479,18 +489,26 @@ export default function Presentation() {
   }, [current])
 
   return (
-    <div className="bg-slate-950 min-h-screen flex flex-col">
-      {/* Apresentação */}
+    <div className="bg-slate-950 min-h-screen flex flex-col font-inter text-slate-200">
+      {/* Área do Slide */}
       <div className="flex-1 relative overflow-hidden">
         <AnimatePresence mode="wait">
           <SlideRenderer key={current} slide={slides[current]} />
         </AnimatePresence>
       </div>
 
-      {/* Controles */}
-      <div className="bg-slate-900 border-t border-slate-800 px-6 py-4 flex items-center justify-between gap-4">
-        <div className="text-slate-400 text-sm font-medium">
-          {current + 1} / {slides.length}
+      {/* Barra de Controle */}
+      <div className="bg-slate-900 border-t border-slate-800 px-6 py-4 flex items-center justify-between gap-4 z-50">
+        <div className="flex items-center gap-4">
+          <span className="text-slate-500 text-sm font-medium font-mono">
+            {String(current + 1).padStart(2, '0')} / {slides.length}
+          </span>
+          <div className="h-1 w-24 bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all duration-300"
+              style={{ width: `${((current + 1) / slides.length) * 100}%` }}
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -499,6 +517,7 @@ export default function Presentation() {
             disabled={current === 0}
             variant="ghost"
             size="sm"
+            className="text-slate-400 hover:text-white hover:bg-slate-800"
           >
             <ChevronLeft className="w-5 h-5" />
           </Button>
@@ -507,6 +526,7 @@ export default function Presentation() {
             disabled={current === slides.length - 1}
             variant="ghost"
             size="sm"
+            className="text-slate-400 hover:text-white hover:bg-slate-800"
           >
             <ChevronRight className="w-5 h-5" />
           </Button>
@@ -517,20 +537,16 @@ export default function Presentation() {
             onClick={() => setShowNotes(!showNotes)}
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200"
-            title="Toggle speaker notes (n)"
+            className={`transition-colors ${showNotes ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+            title="Notas do apresentador (n)"
           >
-            {showNotes ? (
-              <Volume2 className="w-4 h-4" />
-            ) : (
-              <VolumeX className="w-4 h-4" />
-            )}
+            {showNotes ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
           </Button>
           <Button
             onClick={handleLogout}
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-red-400"
+            className="text-slate-500 hover:text-red-400 hover:bg-red-500/10"
             title="Sair"
           >
             <LogOut className="w-4 h-4" />
@@ -539,18 +555,23 @@ export default function Presentation() {
       </div>
 
       {/* Speaker Notes */}
-      {showNotes && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="bg-slate-800/50 border-t border-slate-700 px-6 py-4 max-h-24 overflow-y-auto"
-        >
-          <p className="text-slate-300 text-sm leading-relaxed italic">
-            {slides[current].speakerNotes}
-          </p>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {showNotes && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-slate-900 border-t border-slate-800 overflow-hidden"
+          >
+            <div className="px-6 py-4 max-w-5xl mx-auto">
+              <p className="text-slate-400 text-sm leading-relaxed font-mono">
+                <span className="text-blue-500 font-bold mr-2">SPEAKER:</span>
+                {slides[current].speakerNotes}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

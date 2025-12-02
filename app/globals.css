@@ -133,3 +133,116 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animações customizadas para apresentação */
+@keyframes pulse-subtle {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.95;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 10px rgba(0, 173, 232, 0.2));
+  }
+  50% { 
+    filter: drop-shadow(0 0 25px rgba(0, 173, 232, 0.4));
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes draw-line {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+/* Utilitários customizados */
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #1ab0ff 0%, #00ade8 50%, #008bb8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat);
+}
+
+/* Glassmorphism */
+.glass-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+/* Ness Design System - Brand Utilities */
+.brand-dot {
+  color: #00ade8;
+  font-weight: 700;
+}
+
+.dark .brand-dot {
+  color: #33BEE6;
+}
+
+/* Hierarchy de uso do azul */
+.blue-presence {
+  /* CTAs, badges, links - alto impacto */
+  color: #1ab0ff;
+}
+
+.blue-highlight {
+  /* Hover states, focus rings - médio destaque */
+  color: #00ade8;
+}
+
+.blue-subtle {
+  /* Backgrounds, bordas sutis - baixo impacto */
+  background: rgba(0, 173, 232, 0.05);
+}
+
+/* CTA principal com gradiente */
+.cta-primary {
+  background: linear-gradient(135deg, #00ade8 0%, #008bb8 100%);
+  color: white;
+  border: none;
+}
+
+.cta-primary:hover {
+  background: linear-gradient(135deg, #1ab0ff 0%, #00ade8 100%);
+}
+
+/* Badge de marca */
+.badge-brand {
+  background: rgba(0, 173, 232, 0.10);
+  border: 1px solid rgba(0, 173, 232, 0.20);
+  color: #1ab0ff;
+}
+

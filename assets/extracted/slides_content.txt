@@ -1,0 +1,329 @@
+CONTEÚDO EXTRAÍDO DO PPT - Total: 26 slides
+====================================================================================================
+
+
+### SLIDE 1 ###
+Layout: TITLE
+
+
+TEXTOS:
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 2 ###
+Layout: TITLE_AND_TWO_COLUMNS
+
+IMAGEM: slide_02_image_1.png
+
+TEXTOS:
+  - Governança de Segurança da Informação
+  - 05/11/2025
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 3 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_03_image_1.png
+
+TEXTOS:
+  - FRAMEWORK CIS CONTROLS E OS GRUPOS DE IMPLEMENTAÇÃO (IG)
+  - O CIS Controls é um framework de segurança cibernética composto por um conjunto de controles recomendados para proteger sistemas e dados contra ameaças cibernéticas. Esses controles são organizados em três Grupos de Implementação (IGs), que variam conforme a complexidade e os recursos disponíveis das organizações:
+  - IG1 (Implementation Group 1): Foca em controles essenciais para organizações com recursos limitados, como pequenas e médias empresas. Prioriza medidas básicas de segurança, como controle de ativos, proteção de credenciais e gestão de vulnerabilidades.
+IG2 (Implementation Group 2): Voltado para organizações com maior nível de risco e mais recursos disponíveis, exigindo monitoramento contínuo, controle de acessos mais avançado e proteção de dados sensíveis.
+  - IG3 (Implementation Group 3): Destinado a empresas com alta criticidade em segurança, como setores financeiros, de saúde e infraestrutura crítica. Inclui controles avançados, como resposta a incidentes, análise comportamental e segmentação de rede.
+  - Os IGs ajudam organizações a priorizar a implementação dos controles de acordo com seu nível de maturidade em segurança e necessidades operacionais.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 4 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_04_image_1.png
+
+TEXTOS:
+  - CIS CONTROLS - Manesco
+  - O IG2 (Implementation Group 2) no CIS Controls é um conjunto de práticas de segurança destinado a organizações com uma infraestrutura de TI mais desenvolvida e com maior capacidade de implementação. Ele abrange controles que exigem mais recursos e experiência em comparação com o IG1, com foco em mitigar riscos mais complexos e avançados.
+
+Para Manesco definimos como base o IG2 porque este grupo atende às necessidades da organização de estabelecer uma base sólida de segurança. Com a implementação do IG2, a Manesco pode elevar seu nível de segurança, proteger suas informações e melhorar sua governança de TI, alinhando-se às melhores práticas de cibersegurança.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 5 ###
+Layout: 1_Layout Personalizado
+
+TABELA (18x1):
+  | 1. Inventário e Controle de Ativos Corporativos |
+  | 2. Inventário e Controle de Ativos de Software |
+  | 3. Proteção de dados |
+  | 4. Configuração segura de ativos e softwares corporativos |
+  | 5. Estabelecer e Manter um Inventário de Contas |
+  | 6. Gerenciamento de controle de acesso |
+  | 7. Gerenciamento contínuo de vulnerabilidades |
+  | 8. Gerenciamento de log de auditoria |
+  | 9. Proteções de e-mail e navegadores da Web |
+  | 10. Defesas de Malware |
+  | 11. Recuperação de dados |
+  | 12. Gerenciamento de infraestrutura de rede |
+  | 13. Monitoramento e Proteção de Rede |
+  | 14. Conscientização de Segurança e Treinamento de Competência |
+  | 15. Gerenciamento de provedores de serviços |
+  | 16. Segurança do software de aplicativos |
+  | 17. Gerenciamento de resposta a incidentes |
+  | 18. Teste de penetração |
+
+IMAGEM: slide_05_image_1.png
+
+TEXTOS:
+  - CONTROLES ESCOPO CIS V8 – IG 2
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 6 ###
+Layout: 1_Section title and description
+
+
+TEXTOS:
+  - Evolução dos Controles
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 7 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_07_image_1.png
+
+TEXTOS:
+  - Evolução dos Controles – Status Atual
+  - O gráfico abaixo representa os valores de implantação dos controles frente ao CIS CONTROLS V8 – IG2, demonstrando o status atual e o comparativo com a referência de mercado
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 8 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_08_image_1.png
+
+TEXTOS:
+  - Evolução dos Controles – Status Atual
+  - O gráfico abaixo representa a evolução da implantação dos controles em relação ao CIS Controls v8 – IG2, com a comparação entre os períodos anteriores de avaliação.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 9 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_09_image_1.png
+
+TEXTOS:
+  - Evolução dos Controles – Controles Trabalhados
+  - Do total de 18 controles do CIS, os controles abaixo sofreram alterações conforme as ações de implantação foram executadas.
+  - 2 – Inventário e Controle de Ativos de Software
+3 - Proteção de dados
+4 - Configuração segura de ativos e softwares corporativos
+5 - Estabelecer e Manter um inventário de contas
+6 - Gerenciamento de controle de acessos
+8 - Gerenciamento de log de auditoria
+9 - Proteções de e-mail e navegadores da Web
+13 - Monitoramento e proteção de rede
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 10 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_10_image_1.png
+
+TEXTOS:
+  - Evolução dos Controles – Controles Trabalhados
+  - O gráfico abaixo apresenta a evolução da implantação dos controles trabalhados em relação ao CIS Controls v8 – IG2, no período de maio a novembro de 2025.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 11 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_11_image_1.wmf
+IMAGEM: slide_11_image_2.png
+
+TEXTOS:
+  - Evolução dos Controles – Maturidade Atual
+  - O gráfico abaixo apresenta os níveis atuais de maturidade em relação ao CIS Controls v8 – IG2
+  - *O Controle 16 não está sendo considerado devido à ausência de desenvolvimento interno.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 12 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_12_image_1.png
+
+TEXTOS:
+  - Evolução dos Controles - Maturidade
+  - O gráfico abaixo apresenta os níveis de maturidade em relação ao CIS Controls v8 – IG2, avaliados no período de dezembro de 2023 a novembro de 2025. Entre maio e novembro de 2025, não houve evolução significativa na maturidade geral, exceto pela implantação da solução de SIEM (Correlacionador de Logs), vinculada ao Controle 8 – Gerenciamento de Log e Auditoria, que progrediu do nível Inicial para Repetitivo. A ausência de avanços adicionais deve-se à pendência de aprovação e formalização dos processos, normas e políticas já desenvolvidos.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 13 ###
+Layout: TITLE_AND_TWO_COLUMNS
+
+IMAGEM: slide_13_image_1.png
+
+TEXTOS:
+  - Gestão de Vulnerabilidades
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 14 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_14_image_1.png
+IMAGEM: slide_14_image_2.png
+
+TEXTOS:
+  - GESTÃO DE VULNERABILIDADES
+  - Scan de Vulnerabilidade em Servidores e Estações
+  - Escopo de 15 servidores e 151 estações.
+Este gráfico apresenta a evolução das vulnerabilidades encontradas após a retomada da recorrência de avaliação.
+Destaque para a quantidade de vulnerabilidades novas e tratadas no período de setembro e outubro. O escopo da análise abrange servidores e estações, com foco em vulnerabilidades associadas a softwares sem atualização ou sem suporte.
+  - Através dessa análise, conseguimos observar o impacto das vulnerabilidades e as ações tomadas para mitigar riscos.
+  - Os scans de vulnerabilidades serão executados uma vez ao mês.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 15 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_15_image_1.png
+
+TEXTOS:
+  - GESTÃO DE VULNERABILIDADES
+  - Este gráfico apresenta o total de vulnerabilidades identificadas no período de scans.
+Houve uma redução significativa na quantidade total de vulnerabilidades, parte vulnerabilidades corrigidas estão associadas as vulnerabilidades de estação de trabalho.
+  - Scan de Vulnerabilidade em Servidores e Estações
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 16 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_16_image_1.png
+IMAGEM: slide_16_image_2.png
+IMAGEM: slide_16_image_3.png
+IMAGEM: slide_16_image_4.png
+IMAGEM: slide_16_image_5.png
+IMAGEM: slide_16_image_6.png
+IMAGEM: slide_16_image_7.png
+
+TEXTOS:
+  - Scan de vulnerabilidade em aplicações corporativas
+  - Penteste automatizado em aplicações corporativas (ref.Outubro).
+Escopo de 8 aplicações.
+O pentest automatizado avalia falhas de configuração, identificando configurações incorretas que podem ser exploradas por atacantes. Também verifica vulnerabilidades conhecidas, analisando se o sistema é suscetível a falhas documentadas e sem patches aplicados. Além disso, realiza uma análise de exposição à rede, verificando se serviços desnecessários estão expostos à internet, e testa a segurança de aplicações web.
+  - GESTÃO DE VULNERABILIDADES
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 17 ###
+Layout: 1_Section title and description
+
+
+TEXTOS:
+  - TAREFAS
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 18 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_18_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+  - As tarefas foram definidas com base no risco e no impacto, priorizando aquelas que geram maior resultado com o menor esforço.
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 19 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_19_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 20 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_20_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 21 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_21_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 22 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_22_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 23 ###
+Layout: 1_Layout Personalizado
+
+IMAGEM: slide_23_image_1.wmf
+
+TEXTOS:
+  - Evolução dos Controles – Status Tarefas
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 24 ###
+Layout: 1_Section title and description
+
+
+TEXTOS:
+  - PONTOS DE ATENÇÃO
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 25 ###
+Layout: 1_Layout Personalizado
+
+
+TEXTOS:
+  - Evolução dos Controles – Pontos de Atenção
+  - Apesar da evolução em relação a implantação dos controle de segurança CIS, não houve evoluções significativas relacionadas a maturidade isso ocorre devia a ausência de formalização e publicação de processos já desenvolvidos e executados pela equipe de forma repetitiva.
+Formalização do Comitê de Segurança da Informação, de acordo com as recomendações e o processo já encaminhados.
+Retomada do processo de privacidade de dados e de conscientização em segurança da informação.
+Iniciar a implantação do processo para gestão de incidentes.
+Dar continuidade ao Book de Indicadores(modelo) já disponibilizado para a Manesco.
+  - Pontos de Atenção
+
+----------------------------------------------------------------------------------------------------
+
+### SLIDE 26 ###
+Layout: TITLE
+
+IMAGEM: slide_26_image_1.png
+IMAGEM: slide_26_image_2.png
+
+TEXTOS:
+
+----------------------------------------------------------------------------------------------------

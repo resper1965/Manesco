@@ -6,7 +6,7 @@
  */
 export function BrandDot({ className = '' }: { className?: string }) {
   return (
-    <span className={`text-[#00ade8] dark:text-primary-dark whitespace-nowrap ${className}`}>
+    <span className={`text-[#00ade8] dark:text-primary-dark whitespace-nowrap font-bold ${className}`}>
       .
     </span>
   )
@@ -16,11 +16,11 @@ export function BrandDot({ className = '' }: { className?: string }) {
  * Componente para wordmark completo (palavra + ponto azul)
  * Exemplo: ness., n.secops, trustness., etc.
  */
-export function BrandWordmark({ 
-  word, 
+export function BrandWordmark({
+  word,
   className = '',
   dotClassName = ''
-}: { 
+}: {
   word: string
   className?: string
   dotClassName?: string
