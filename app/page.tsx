@@ -1,5 +1,12 @@
 import { redirect } from 'next/navigation'
+import { isAuthenticated } from '@/lib/auth'
 
-export default function Home() {
-  redirect('/presentation')
+export default async function Home() {
+  const authenticated = await isAuthenticated()
+  
+  if (authenticated) {
+    redirect('/presentation')
+  } else {
+    redirect('/login')
+  }
 }

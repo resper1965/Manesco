@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 // Slides data
@@ -377,6 +378,7 @@ function SlideRenderer({ slide }: { slide: any }) {
 export default function Presentation() {
   const [current, setCurrent] = useState(0)
   const [showNotes, setShowNotes] = useState(true)
+  const router = useRouter()
 
   const nextSlide = () => {
     if (current < slides.length - 1) {
@@ -387,6 +389,16 @@ export default function Presentation() {
   const prevSlide = () => {
     if (current > 0) {
       setCurrent(current - 1)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
     }
   }
 
@@ -445,18 +457,30 @@ export default function Presentation() {
           </Button>
         </div>
 
-        <Button
-          onClick={() => setShowNotes(!showNotes)}
-          variant="ghost"
-          size="sm"
-          className="text-slate-400 hover:text-slate-200"
-        >
-          {showNotes ? (
-            <Volume2 className="w-4 h-4" />
-          ) : (
-            <VolumeX className="w-4 h-4" />
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => setShowNotes(!showNotes)}
+            variant="ghost"
+            size="sm"
+            className="text-slate-400 hover:text-slate-200"
+            title="Toggle speaker notes (n)"
+          >
+            {showNotes ? (
+              <Volume2 className="w-4 h-4" />
+            ) : (
+              <VolumeX className="w-4 h-4" />
+            )}
+          </Button>
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            size="sm"
+            className="text-slate-400 hover:text-red-400"
+            title="Sair"
+          >
+            <LogOut className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Speaker Notes */}
