@@ -15,6 +15,7 @@ import { VulnerabilityEvolutionChart } from '@/components/presentation/vulnerabi
 import { PentestGrid } from '@/components/presentation/pentest-grid'
 import { TaskStatusGrid } from '@/components/presentation/task-status-grid'
 import { SectionDivider } from '@/components/presentation/section-divider'
+import { CisStatusChart } from '@/components/presentation/cis-status-chart'
 
 // Data
 import {
@@ -28,7 +29,8 @@ import {
   tarefasPorStatus,
   implementationEvolution,
   maturityEvolution,
-  statusVsReference
+  statusVsReference,
+  workedEvolution
 } from '@/lib/presentation-data'
 
 // Slides Configuration
@@ -113,7 +115,7 @@ const slides = [
   {
     type: 'chart-line',
     title: 'Evolução da Implantação',
-    subtitle: 'Aderência Geral ao IG2 (Mai/25 - Nov/25)',
+    subtitle: 'Aderência Geral ao IG2 (Dez/23 - Nov/25)',
     data: implementationEvolution,
     lines: [{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }],
     speakerNotes: 'Crescemos de 15% para 45% de aderência geral em 6 meses.',
@@ -133,7 +135,7 @@ const slides = [
     type: 'chart-line',
     title: 'Evolução - Controles Trabalhados',
     subtitle: 'Progresso específico nos controles prioritários',
-    data: implementationEvolution,
+    data: workedEvolution,
     lines: [{ dataKey: 'trabalhados', name: 'Controles Trabalhados (%)', color: '#22c55e' }],
     speakerNotes: 'Nos controles prioritários, nossa evolução é ainda mais expressiva, chegando a 82%.',
   },
@@ -142,14 +144,7 @@ const slides = [
   {
     type: 'radar',
     title: 'Maturidade Atual por Controle',
-    data: currentMaturity.map(m => {
-      const control = cisControls.find(c => c.id === m.controleId)
-      return {
-        controle: `CIS ${m.controleId}`,
-        nivel: m.nivel === 'Inicial' ? 1 : m.nivel === 'Repetitivo' ? 2 : m.nivel === 'Definido' ? 3 : 4,
-        nivelTexto: m.nivel
-      }
-    }),
+    data: currentMaturity,
     speakerNotes: 'A maioria dos controles está no nível "Repetitivo". O objetivo é chegar em "Definido" com a formalização.',
   },
 
@@ -159,8 +154,8 @@ const slides = [
     title: 'Evolução da Maturidade',
     subtitle: 'Nível médio (1=Inicial, 2=Repetitivo, 3=Definido)',
     data: maturityEvolution,
-    lines: [{ dataKey: 'nivel', name: 'Nível Médio', color: '#f59e0b' }],
-    yAxisLabel: 'Nível de Maturidade',
+    lines: [{ dataKey: 'nivel', name: 'Nível Médio (%)', color: '#f59e0b' }],
+    yAxisLabel: 'Nível de Maturidade (%)',
     speakerNotes: 'A maturidade evolui mais lentamente que a implantação técnica, pois depende de processos e pessoas.',
   },
 
@@ -356,8 +351,9 @@ function ChartSlide({ data, type }: any) {
           <p className="text-slate-400 text-lg">{data.subtitle}</p>
         )}
       </div>
-      <div className="flex-1 bg-slate-850/50 rounded-2xl border border-slate-800 p-6 backdrop-blur-sm">
+      <div className="flex-1 bg-slate-850/50 rounded-2xl border border-slate-800 p-6 backdrop-blur-sm flex items-center justify-center">
         {type === 'radar' && <MaturityRadar data={data.data} />}
+        {type === 'chart-bar' && <CisStatusChart data={data.data} />}
         {type === 'chart-line' && <EvolutionTimeline data={data.data} lines={data.lines} yAxisLabel={data.yAxisLabel} />}
         {type === 'vuln-chart' && <VulnerabilityEvolutionChart data={data.data} />}
         {type === 'vuln-trend' && <VulnerabilityEvolutionChart data={data.data} />}
@@ -426,6 +422,7 @@ function SlideRenderer({ slide }: { slide: any }) {
     case 'divider':
       return <SectionDivider title={slide.title} subtitle={slide.subtitle} />
     case 'radar':
+    case 'chart-bar':
     case 'chart-line':
     case 'vuln-chart':
     case 'vuln-trend':

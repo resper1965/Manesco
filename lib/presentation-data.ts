@@ -6,32 +6,6 @@
  * Valores aproximados onde não foi possível ler números exatos
  */
 
-// ===== 18 CONTROLES CIS IG2 =====
-export const cisControls = [
-    { id: 1, name: "Inventário e Controle de Ativos Corporativos", category: "Asset Management" },
-    { id: 2, name: "Inventário e Controle de Ativos de Software", category: "Asset Management", worked: true },
-    { id: 3, name: "Proteção de dados", category: "Data Protection", worked: true },
-    { id: 4, name: "Configuração segura de ativos e softwares corporativos", category: "Configuration", worked: true },
-    { id: 5, name: "Estabelecer e Manter um Inventário de Contas", category: "Access Control", worked: true },
-    { id: 6, name: "Gerenciamento de controle de acesso", category: "Access Control", worked: true },
-    { id: 7, name: "Gerenciamento contínuo de vulnerabilidades", category: "Vulnerability Management" },
-    { id: 8, name: "Gerenciamento de log de auditoria", category: "Monitoring", worked: true },
-    { id: 9, name: "Proteções de e-mail e navegadores da Web", category: "Application Security", worked: true },
-    { id: 10, name: "Defesas de Malware", category: "Malware Defense" },
-    { id: 11, name: "Recuperação de dados", category: "Recovery" },
-    { id: 12, name: "Gerenciamento de infraestrutura de rede", category: "Network" },
-    { id: 13, name: "Monitoramento e Proteção de Rede", category: "Network", worked: true },
-    { id: 14, name: "Conscientização de Segurança e Treinamento de Competência", category: "Training" },
-    { id: 15, name: "Gerenciamento de provedores de serviços", category: "Third Party" },
-    { id: 16, name: "Segurança do software de aplicativos", category: "Application Security", excluded: true },
-    { id: 17, name: "Gerenciamento de resposta a incidentes", category: "Incident Response" },
-    { id: 18, name: "Teste de penetração", category: "Penetration Testing" },
-]
-
-// Controles ativamente trabalhados (8 de 18)
-export const workedControls = cisControls.filter(c => c.worked)
-
-// ===== NÍVEIS DE MATURIDADE =====
 export type MaturityLevel = "Inicial" | "Repetitivo" | "Definido" | "Gerenciado" | "Otimizado"
 
 export const maturityLevels: MaturityLevel[] = [
@@ -40,28 +14,6 @@ export const maturityLevels: MaturityLevel[] = [
     "Definido",
     "Gerenciado",
     "Otimizado"
-]
-
-// Maturidade atual por controle (baseado em Slide 11)
-// NOTA: Valores aproximados - precisarão ser ajustados com dados exatos
-export const currentMaturity = [
-    { controleId: 1, nivel: "Repetitivo" },
-    { controleId: 2, nivel: "Repetitivo" },
-    { controleId: 3, nivel: "Inicial" },
-    { controleId: 4, nivel: "Repetitivo" },
-    { controleId: 5, nivel: "Repetitivo" },
-    { controleId: 6, nivel: "Repetitivo" },
-    { controleId: 7, nivel: "Inicial" },
-    { controleId: 8, nivel: "Repetitivo" }, // SIEM implementado
-    { controleId: 9, nivel: "Inicial" },
-    { controleId: 10, nivel: "Inicial" },
-    { controleId: 11, nivel: "Inicial" },
-    { controleId: 12, nivel: "Inicial" },
-    { controleId: 13, nivel: "Repetitivo" },
-    { controleId: 14, nivel: "Inicial" },
-    { controleId: 15, nivel: "Inicial" },
-    { controleId: 17, nivel: "Inicial" },
-    { controleId: 18, nivel: "Inicial" },
 ]
 
 // ===== GESTÃO DE VULNERABILIDADES =====
@@ -171,33 +123,114 @@ export const pontosAtencao = [
     },
 ]
 
-// ===== DADOS PARA GRÁFICOS (Slides 7, 8, 10, 12) =====
+// ===== DADOS REAIS (Fornecidos pelo Usuário) =====
 
-// Slide 7: Status Atual vs Referência
-export const statusVsReference = [
-    { name: 'Aderência IG2', atual: 45, referencia: 100 },
-    { name: 'Maturidade Média', atual: 35, referencia: 100 },
+// 1) Controles CIS – Status Atual (Manesco x Referência de Mercado)
+export const cisStatusData = [
+    { id: 1, name: "Inventário e Controle de Ativos Corporativos", manesco: 87.5, mercado: 58.0 },
+    { id: 2, name: "Inventário e Controle de Ativos de Software", manesco: 91.7, mercado: 56.0, worked: true },
+    { id: 3, name: "Proteção de dados", manesco: 37.5, mercado: 55.0, worked: true },
+    { id: 4, name: "Configuração segura de ativos e softwares", manesco: 59.1, mercado: 70.0, worked: true },
+    { id: 5, name: "Estabelecer e Manter um Inventário de Contas", manesco: 91.7, mercado: 73.0, worked: true },
+    { id: 6, name: "Gerenciamento de controle de acesso", manesco: 79.2, mercado: 72.0, worked: true },
+    { id: 7, name: "Gerenciamento contínuo de vulnerabilidades", manesco: 89.3, mercado: 65.0 },
+    { id: 8, name: "Gerenciamento de log de auditoria", manesco: 63.6, mercado: 61.0, worked: true },
+    { id: 9, name: "Proteções de e-mail e navegadores da Web", manesco: 100.0, mercado: 70.0, worked: true },
+    { id: 10, name: "Defesas de Malware", manesco: 92.9, mercado: 71.0 },
+    { id: 11, name: "Recuperação de dados", manesco: 20.0, mercado: 72.0 },
+    { id: 12, name: "Gerenciamento de infraestrutura de rede", manesco: 37.5, mercado: 71.0 },
+    { id: 13, name: "Monitoramento e Proteção de Rede", manesco: 54.2, mercado: 65.0, worked: true },
+    { id: 14, name: "Conscientização de Segurança e Treinamento", manesco: 47.2, mercado: 64.0 },
+    { id: 15, name: "Gerenciamento de Provedores de Serviços", manesco: 0.0, mercado: 55.0 },
+    { id: 16, name: "Segurança do software de aplicativos", manesco: 0, mercado: 57.0, excluded: true }, // NaN tratado como 0
+    { id: 17, name: "Gerenciamento de resposta a incidentes", manesco: 0.0, mercado: 67.0 },
+    { id: 18, name: "Teste de penetração", manesco: 91.7, mercado: 61.0 },
 ]
 
-// Slide 8 & 10: Evolução da Implantação (Geral e Trabalhados)
+// Atualiza a lista base de controles com os dados reais
+export const cisControls = cisStatusData.map(c => ({
+    id: c.id,
+    name: c.name,
+    category: "CIS Control", // Simplificado pois não veio no input novo, mas mantemos a prop
+    worked: c.worked,
+    excluded: c.excluded
+}))
+
+export const workedControls = cisControls.filter(c => c.worked)
+
+// Slide 7: Status Atual vs Referência (Dados para Gráfico)
+export const statusVsReference = cisStatusData.map(c => ({
+    name: `CIS ${c.id}`,
+    Manesco: c.manesco,
+    Mercado: c.mercado
+}))
+
+// 2) Controles CIS – Evolução da Maturidade por Período (Médias Calculadas)
+// Dados brutos para referência
+const evolutionData = [
+    { id: 1, d23: 6.2, j24: 6.2, m25: 87.5, o25: 87.5, n25: 87.5 },
+    { id: 2, d23: 16.7, j24: 16.7, m25: 75.0, o25: 75.0, n25: 91.7 },
+    { id: 3, d23: 6.2, j24: 6.2, m25: 33.3, o25: 35.4, n25: 37.5 },
+    { id: 4, d23: 29.5, j24: 29.5, m25: 54.5, o25: 59.1, n25: 59.1 },
+    { id: 5, d23: 33.3, j24: 66.7, m25: 79.2, o25: 91.7, n25: 91.7 },
+    { id: 6, d23: 28.6, j24: 28.6, m25: 50.0, o25: 79.2, n25: 79.2 },
+    { id: 7, d23: 21.4, j24: 21.4, m25: 82.1, o25: 82.1, n25: 89.3 },
+    { id: 8, d23: 9.1, j24: 9.1, m25: 22.7, o25: 56.8, n25: 56.8 },
+    { id: 9, d23: 29.2, j24: 29.2, m25: 54.2, o25: 66.7, n25: 100.0 },
+    { id: 10, d23: 78.6, j24: 78.6, m25: 92.9, o25: 92.9, n25: 92.9 },
+    { id: 11, d23: 30.0, j24: 30.0, m25: 20.0, o25: 20.0, n25: 20.0 },
+    { id: 12, d23: 35.7, j24: 35.7, m25: 37.5, o25: 37.5, n25: 37.5 },
+    { id: 13, d23: 33.3, j24: 44.4, m25: 50.0, o25: 54.2, n25: 54.2 },
+    { id: 14, d23: 2.8, j24: 2.8, m25: 47.2, o25: 47.2, n25: 47.2 },
+    { id: 15, d23: 0.0, j24: 0.0, m25: 0.0, o25: 0.0, n25: 0.0 },
+    // 16 Excluído
+    { id: 17, d23: 0.0, j24: 0.0, m25: 0.0, o25: 0.0, n25: 0.0 },
+    { id: 18, d23: 83.3, j24: 83.3, m25: 91.7, o25: 91.7, n25: 91.7 },
+]
+
+// Função auxiliar para calcular média de um período
+const calcAvg = (key: 'd23' | 'j24' | 'm25' | 'o25' | 'n25', subsetIds?: number[]) => {
+    const controlsToUse = subsetIds
+        ? evolutionData.filter(c => subsetIds.includes(c.id))
+        : evolutionData
+
+    const sum = controlsToUse.reduce((acc, curr) => acc + curr[key], 0)
+    return Number((sum / controlsToUse.length).toFixed(1))
+}
+
+// Slide 8: Evolução Geral (Média de todos os controles)
 export const implementationEvolution = [
-    { periodo: 'Mai/25', geral: 15, trabalhados: 20 },
-    { periodo: 'Jun/25', geral: 20, trabalhados: 35 },
-    { periodo: 'Jul/25', geral: 25, trabalhados: 45 },
-    { periodo: 'Ago/25', geral: 30, trabalhados: 55 },
-    { periodo: 'Set/25', geral: 35, trabalhados: 65 },
-    { periodo: 'Out/25', geral: 40, trabalhados: 75 },
-    { periodo: 'Nov/25', geral: 45, trabalhados: 82 },
+    { periodo: 'Dez/23', geral: calcAvg('d23') },
+    { periodo: 'Jul/24', geral: calcAvg('j24') },
+    { periodo: 'Mai/25', geral: calcAvg('m25') },
+    { periodo: 'Out/25', geral: calcAvg('o25') },
+    { periodo: 'Nov/25', geral: calcAvg('n25') },
 ]
 
-// Slide 12: Evolução da Maturidade
-export const maturityEvolution = [
-    { periodo: 'Dez/23', nivel: 1.2 }, // Inicial
-    { periodo: 'Jun/24', nivel: 1.5 },
-    { periodo: 'Dez/24', nivel: 1.8 },
-    { periodo: 'Mai/25', nivel: 2.0 }, // Repetitivo
-    { periodo: 'Nov/25', nivel: 2.1 }, // Repetitivo (pouca evolução)
+// Slide 10: Evolução Controles Trabalhados (Média do subconjunto)
+const workedIds = [2, 3, 4, 5, 6, 8, 9, 13]
+export const workedEvolution = [
+    { periodo: 'Dez/23', trabalhados: calcAvg('d23', workedIds) },
+    { periodo: 'Jul/24', trabalhados: calcAvg('j24', workedIds) },
+    { periodo: 'Mai/25', trabalhados: calcAvg('m25', workedIds) },
+    { periodo: 'Out/25', trabalhados: calcAvg('o25', workedIds) },
+    { periodo: 'Nov/25', trabalhados: calcAvg('n25', workedIds) },
 ]
+
+// Slide 12: Evolução da Maturidade (Usando os mesmos dados de evolução percentual como proxy de maturidade para o gráfico)
+// O usuário forneceu "Evolução da Maturidade" em %, então usamos os mesmos dados.
+export const maturityEvolution = implementationEvolution.map(d => ({
+    periodo: d.periodo,
+    nivel: d.geral // Usando % como métrica de maturidade conforme dados
+}))
+
+// Slide 11: Maturidade Atual por Controle (Radar)
+// Usando dados de Nov/25
+export const currentMaturity = evolutionData.map(c => ({
+    controleId: c.id,
+    nivel: c.n25 >= 80 ? 'Otimizado' : c.n25 >= 60 ? 'Gerenciado' : c.n25 >= 40 ? 'Definido' : c.n25 >= 20 ? 'Repetitivo' : 'Inicial',
+    valor: c.n25
+}))
 
 // ===== TAREFAS (Slides 18-23) =====
 // Agrupamento de tarefas por status e prioridade
