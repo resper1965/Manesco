@@ -19,10 +19,18 @@ const config = {
         blue: {
           500: '#00ade8',
           400: '#1ab0ff',
+          600: '#008bb8',
+        },
+        primary: {
+          500: '#00ade8',
+          400: '#1ab0ff',
+          600: '#008bb8',
+          dark: '#33BEE6', // Dark mode variant
         },
       },
       fontFamily: {
         inter: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        montserrat: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '4.5': '1.125rem',

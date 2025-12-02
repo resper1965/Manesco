@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,9 +8,15 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Governança de Segurança - Manesco | NESS",
-  description: "Apresentação N.SecOps - Status e Oportunidades",
+  title: "Governança de Segurança - Manesco | ness.",
+  description: "Apresentação n.secops - Status e Oportunidades",
 };
 
 export default function RootLayout({
@@ -20,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable} font-inter bg-slate-950 text-slate-100 antialiased`}>
+      <body className={`${inter.variable} ${montserrat.variable} font-inter bg-slate-950 text-slate-100 antialiased`}>
         {children}
       </body>
     </html>

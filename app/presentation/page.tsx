@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { BrandWordmark } from '@/components/ui/brand-dot'
 
 // Slides data
 const slides = [
@@ -67,7 +68,7 @@ const slides = [
   },
   {
     type: 'content',
-    title: 'N.SecOps: Caminho para "Definido"',
+    title: 'n.secops: Caminho para "Definido"',
     items: [
       'Serviço gerenciado que torna segurança operação contínua.',
       '',
@@ -120,11 +121,11 @@ const slides = [
   },
   {
     type: 'content',
-    title: 'Por que Executar com NESS',
+    title: 'Por que Executar com ness.',
     items: [
       '✓ 34 anos em segurança cibernética',
       '✓ Experiência em healthcare (mesma complexidade)',
-      '✓ Plataforma N.SecOps desenvolvida para mercado BR',
+      '✓ Plataforma n.secops desenvolvida para mercado BR',
       '✓ Abordagem advisory + operacional',
       '✓ Suporte SLA 24x7 garantido',
     ],
@@ -144,7 +145,7 @@ const slides = [
   {
     type: 'contact',
     name: 'Mônica Yoshida',
-    title: 'NESS',
+    title: 'ness.',
     email: 'myoshida@ness.com.br',
     phone: '+55 11 2504-7650',
     speakerNotes: 'Deixe contato na tela. Agradeça. "Alguma pergunta?"',
@@ -173,6 +174,9 @@ function TitleSlide({ data }: any) {
 }
 
 function ContentSlide({ data }: any) {
+  // Verifica se o título contém marca (ness., n.secops, etc.)
+  const hasBrand = data.title.includes('ness.') || data.title.includes('n.secops')
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -180,27 +184,76 @@ function ContentSlide({ data }: any) {
       exit={{ opacity: 0, y: -20 }}
       className="flex flex-col h-screen gap-8 px-8 py-12 md:px-12"
     >
-      <h2 className="text-4xl md:text-5xl font-light text-slate-100">
-        {data.title}
+      <h2 className={`text-4xl md:text-5xl font-light text-slate-100 ${hasBrand ? 'font-montserrat font-medium' : ''}`}>
+        {hasBrand && data.title.includes('n.secops') ? (
+          <>
+            n<span className="text-[#00ade8]">.</span>secops{data.title.split('n.secops')[1]}
+          </>
+        ) : hasBrand && data.title.includes('ness.') ? (
+          <>
+            ness<span className="text-[#00ade8]">.</span>{data.title.split('ness.')[1]}
+          </>
+        ) : (
+          data.title
+        )}
       </h2>
       <div className="flex-1 space-y-6 overflow-y-auto pr-4">
-        {data.items.map((item: string, i: number) => (
-          <motion.p
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className={`text-lg md:text-xl leading-relaxed ${
-              item.includes('✓')
-                ? 'text-slate-200 font-medium'
-                : item === ''
-                ? 'h-2'
-                : 'text-slate-300'
-            }`}
-          >
-            {item}
-          </motion.p>
-        ))}
+        {data.items.map((item: string, i: number) => {
+          // Substitui referências de marca no conteúdo
+          let content = item
+          if (item.includes('n.secops') || item.includes('N.SecOps')) {
+            content = item.replace(/n\.secops/gi, 'n.secops')
+          }
+          if (item.includes('NESS') || item.includes('ness.')) {
+            content = item.replace(/NESS/gi, 'ness.')
+          }
+          
+          return (
+            <motion.p
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className={`text-lg md:text-xl leading-relaxed ${
+                item.includes('✓')
+                  ? 'text-slate-200 font-medium'
+                  : item === ''
+                  ? 'h-2'
+                  : 'text-slate-300'
+              }`}
+            >
+              {content.includes('n.secops') ? (
+                <>
+                  {content.split('n.secops').map((part, idx, arr) => (
+                    <span key={idx}>
+                      {part}
+                      {idx < arr.length - 1 && (
+                        <>
+                          n<span className="text-[#00ade8]">.</span>secops
+                        </>
+                      )}
+                    </span>
+                  ))}
+                </>
+              ) : content.includes('ness.') ? (
+                <>
+                  {content.split('ness.').map((part, idx, arr) => (
+                    <span key={idx}>
+                      {part}
+                      {idx < arr.length - 1 && (
+                        <span className="font-montserrat font-medium">
+                          ness<span className="text-[#00ade8]">.</span>
+                        </span>
+                      )}
+                    </span>
+                  ))}
+                </>
+              ) : (
+                content
+              )}
+            </motion.p>
+          )
+        })}
       </div>
     </motion.div>
   )
@@ -345,7 +398,9 @@ function ContactSlide({ data }: any) {
           {data.name}
         </h2>
         <div className="space-y-3">
-          <p className="text-xl text-blue-500 font-medium">{data.title}</p>
+          <p className="text-xl text-blue-500 font-montserrat font-medium">
+            <BrandWordmark word={data.title.replace('.', '')} />
+          </p>
           <p className="text-lg text-slate-300">{data.email}</p>
           <p className="text-lg text-slate-300">{data.phone}</p>
         </div>

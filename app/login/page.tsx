@@ -98,7 +98,7 @@ export default function LoginPage() {
 
           <div className="text-center">
             <p className="text-xs text-slate-500">
-              Governança de Segurança - Manesco | NESS
+              Governança de Segurança - Manesco | ness.
             </p>
           </div>
         </div>

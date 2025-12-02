@@ -49,6 +49,11 @@
   --color-slate-800: #1e2433;
   --color-blue-500: #00ade8;
   --color-blue-400: #1ab0ff;
+  --color-blue-600: #008bb8;
+  --color-primary-500: #00ade8;
+  --color-primary-400: #1ab0ff;
+  --color-primary-600: #008bb8;
+  --color-primary-dark: #33BEE6; /* Dark mode variant */
 }
 
 :root {
