@@ -26,67 +26,40 @@ export const vulnerabilityScanScope = {
 }
 
 // Evolução mensal (Slide 14/15)
-// NOTA: Valores aproximados baseados nas descrições - precisam ser ajustados
+// Dados reais fornecidos: Set/25 e Out/25
 export const vulnerabilityEvolution = [
-    { mes: "Mai/25", novas: 0, tratadas: 0, total: 0 }, // Não havia scan regular
-    { mes: "Jun/25", novas: 0, tratadas: 0, total: 0 },
-    { mes: "Jul/25", novas: 0, tratadas: 0, total: 0 },
-    { mes: "Ago/25", novas: 0, tratadas: 0, total: 0 },
-    { mes: "Set/25", novas: 180, tratadas: 45, total: 250 }, // Retomada dos scans
-    { mes: "Out/25", novas: 120, tratadas: 95, total: 275 }, // Pico de novas + tratamento
-    { mes: "Nov/25", novas: 40, tratadas: 110, total: 205 }, // Redução significativa
+    { mes: "Ago/25", novas: 0, tratadas: 0, total: 0 }, // Marco zero
+    { mes: "Set/25", novas: 0, tratadas: 0, total: 771 }, // Baseline inicial
+    { mes: "Out/25", novas: 53, tratadas: 418, total: 406 }, // Evolução real: 771 + 53 - 418 = 406
 ]
 
 // Total de vulnerabilidades - tendência (Slide 15)
 export const totalVulnerabilitiesTrend = [
-    { periodo: "Set/25", total: 250, criticas: 15, altas: 45, medias: 120, baixas: 70 },
-    { periodo: "Out/25", total: 275, criticas: 18, altas: 52, medias: 130, baixas: 75 },
-    { periodo: "Nov/25", total: 205, criticas: 8, altas: 32, medias: 95, baixas: 70 },
+    { periodo: "Set/25", total: 771, criticas: 345, altas: 95, medias: 220, baixas: 111 },
+    { periodo: "Out/25", total: 406, criticas: 22, altas: 86, medias: 202, baixas: 96 },
+    // O "outro slide" com total 75 (High 5, Med 21, Low 49) parece ser um recorte específico (ex: servidores críticos ou externos)
+    // Mantemos o foco no total geral para a visão executiva
 ]
 
 // ===== PENTESTS EM APLICAÇÕES (Slide 16) =====
+// ===== PENTESTS EM APLICAÇÕES (Slide 16) =====
+// Dados reais consolidados (Out/2025)
+// Escopo: 8 aplicações
+// Total: 75 vulnerabilidades (5 High, 21 Medium, 49 Low)
 export const pentestApplications = [
     {
-        nome: "Aplicação 1",
-        vulnerabilidades: { critico: 0, alto: 2, medio: 5, baixo: 8, info: 3 }
-    },
-    {
-        nome: "Aplicação 2",
-        vulnerabilidades: { critico: 1, alto: 3, medio: 7, baixo: 12, info: 5 }
-    },
-    {
-        nome: "Aplicação 3",
-        vulnerabilidades: { critico: 0, alto: 1, medio: 4, baixo: 6, info: 2 }
-    },
-    {
-        nome: "Aplicação 4",
-        vulnerabilidades: { critico: 0, alto: 0, medio: 3, baixo: 5, info: 1 }
-    },
-    {
-        nome: "Aplicação 5",
-        vulnerabilidades: { critico: 2, alto: 4, medio: 8, baixo: 10, info: 4 }
-    },
-    {
-        nome: "Aplicação 6",
-        vulnerabilidades: { critico: 0, alto: 1, medio: 2, baixo: 4, info: 1 }
-    },
-    {
-        nome: "Aplicação 7",
-        vulnerabilidades: { critico: 0, alto: 2, medio: 6, baixo: 9, info: 3 }
-    },
-    {
-        nome: "Aplicação 8",
-        vulnerabilidades: { critico: 1, alto: 3, medio: 5, baixo: 7, info: 2 }
-    },
+        nome: "Consolidado (8 Aplicações)",
+        vulnerabilidades: { critico: 0, alto: 5, medio: 21, baixo: 49, info: 0 }
+    }
 ]
 
 export const pentestSummary = {
     totalApps: 8,
-    totalVulnerabilities: pentestApplications.reduce((sum, app) =>
-        sum + Object.values(app.vulnerabilidades).reduce((a, b) => a + b, 0), 0
-    ),
-    criticas: pentestApplications.reduce((sum, app) => sum + app.vulnerabilidades.critico, 0),
-    altas: pentestApplications.reduce((sum, app) => sum + app.vulnerabilidades.alto, 0),
+    totalVulnerabilities: 75,
+    criticas: 0,
+    altas: 5,
+    medias: 21,
+    baixas: 49
 }
 
 // ===== PONTOS DE ATENÇÃO (Slide 25) =====
@@ -234,114 +207,135 @@ export const currentMaturity = evolutionData.map(c => ({
 
 // ===== TAREFAS (Slides 18-23) =====
 // Agrupamento de tarefas por status e prioridade
+// ===== TAREFAS (Slides 18-23) =====
 export const tarefas = [
+    // 3.1. Inventário e Controle de Softwares (2) / Proteção de Dados (3)
     {
-        id: 't1',
-        controleRelacionado: 2,
-        titulo: 'Inventário automatizado de software',
-        descricao: 'Implementação de inventário automatizado de ativos de software com integração ao CMDB',
-        status: 'concluido' as const,
-        progress: 100,
-        priority: 'alto' as const,
+        id: 't3.1-1', controleRelacionado: 2, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da norma de Software',
+        descricao: 'Norma sugerida e alterada pela TI. Aguardando aprovação da diretoria (sócios).'
     },
     {
-        id: 't2',
-        controleRelacionado: 3,
-        titulo: 'Classificação de dados sensíveis',
-        descricao: 'Processo de descoberta e classificação automática de dados sensíveis em repositórios',
-        status: 'em-andamento' as const,
-        progress: 75,
-        priority: 'alto' as const,
+        id: 't3.1-2', controleRelacionado: 2, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Bloqueio de execução de scripts',
+        descricao: 'Política local implementada impedindo execução de scripts por usuários não privilegiados.'
     },
     {
-        id: 't3',
-        controleRelacionado: 4,
-        titulo: 'Hardening de servidores',
-        descricao: 'Aplicação de baselines CIS para hardening de servidores Windows e Linux',
-        status: 'concluido' as const,
-        progress: 100,
-        priority: 'alto' as const,
+        id: 't3.1-3', controleRelacionado: 3, status: 'pendente' as const, progress: 0, priority: 'medio' as const,
+        titulo: 'Diretriz de descarte de informações',
+        descricao: 'Incluído no Procedimento de Descarte Seguro. Aguardando aprovação e publicação.'
     },
     {
-        id: 't4',
-        controleRelacionado: 5,
-        titulo: 'Review trimestral de acessos',
-        descricao: 'Processo recorrente de revisão e certificação de acessos privilegiados',
-        status: 'em-andamento' as const,
-        progress: 60,
-        priority: 'medio' as const,
+        id: 't3.1-4', controleRelacionado: 3, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Procedimento de criptografia de disco',
+        descricao: 'Procedimento técnico de criptografia (passo a passo) criado e detalhado.'
+    },
+
+    // 3.2. Política de Segurança / Inventário de Ativos (1)
+    {
+        id: 't3.2-1', controleRelacionado: 1, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da Política de Segurança',
+        descricao: 'Política desenvolvida e avaliada. Aguardando aprovação da diretoria.'
     },
     {
-        id: 't5',
-        controleRelacionado: 6,
-        titulo: 'MFA para acessos críticos',
-        descricao: 'Implementação de autenticação multifator para todos os acessos administrativos',
-        status: 'concluido' as const,
-        progress: 100,
-        priority: 'alto' as const,
+        id: 't3.2-2', controleRelacionado: 1, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da norma de Ativos',
+        descricao: 'Norma sugerida e alterada pela TI. Aguardando aprovação da diretoria.'
     },
     {
-        id: 't6',
-        controleRelacionado: 8,
-        titulo: 'SIEM operacional',
-        descricao: 'Implantação e configuração do SIEM com correlação de logs em tempo real',
-        status: 'concluido' as const,
-        progress: 100,
-        priority: 'alto' as const,
+        id: 't3.2-3', controleRelacionado: 1, status: 'em-andamento' as const, progress: 50, priority: 'medio' as const,
+        titulo: 'Controle de ativos não autorizados',
+        descricao: 'Mapeamento MAC realizado. Aguardando configuração de bloqueio no Firewall.'
     },
     {
-        id: 't7',
-        controleRelacionado: 9,
-        titulo: 'Sandbox de e-mail',
-        descricao: 'Deploy de sandbox para análise de anexos maliciosos em e-mails',
-        status: 'em-andamento' as const,
-        progress: 45,
-        priority: 'medio' as const,
+        id: 't3.2-4', controleRelacionado: 1, status: 'concluido' as const, progress: 100, priority: 'medio' as const,
+        titulo: 'Inventário de rede (Atera RMM)',
+        descricao: 'Todos os equipamentos de rede cadastrados na solução de inventário.'
+    },
+
+    // 3.3. Configuração Segura de Ativos (4)
+    {
+        id: 't3.3-1', controleRelacionado: 4, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da norma de Configuração',
+        descricao: 'Norma sugerida e alterada pela TI. Aguardando aprovação da diretoria.'
     },
     {
-        id: 't8',
-        controleRelacionado: 13,
-        titulo: 'IDS/IPS de rede',
-        descricao: 'Implantação de sistema de detecção e prevenção de intrusão na rede corporativa',
-        status: 'em-andamento' as const,
-        progress: 80,
-        priority: 'alto' as const,
+        id: 't3.3-2', controleRelacionado: 4, status: 'pendente' as const, progress: 0, priority: 'medio' as const,
+        titulo: 'Habilitar HTTPS/SSH em equipamentos',
+        descricao: 'Resta avaliar todos os dispositivos de rede para garantir configuração segura.'
     },
     {
-        id: 't9',
-        controleRelacionado: 7,
-        titulo: 'Scans automáticos de vulnerabilidade',
-        descricao: 'Configuração de scans mensais automáticos em servidores e estações',
-        status: 'concluido' as const,
-        progress: 100,
-        priority: 'alto' as const,
+        id: 't3.3-3', controleRelacionado: 4, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Reavaliação de credenciais',
+        descricao: 'Credenciais checadas em todos os ativos (exceto switch legado).'
     },
     {
-        id: 't10',
-        controleRelacionado: 14,
-        titulo: 'Programa de conscientização',
-        descricao: 'Treinamentos trimestrais de segurança da informação para colaboradores',
-        status: 'pendente' as const,
-        progress: 0,
-        priority: 'medio' as const,
+        id: 't3.3-4', controleRelacionado: 4, status: 'concluido' as const, progress: 100, priority: 'medio' as const,
+        titulo: 'Doc. de avaliação de serviços',
+        descricao: 'Documento interno criado e disponibilizado para a equipe.'
+    },
+
+    // 3.4. Gerenciamento de Contas (5)
+    {
+        id: 't3.4-1', controleRelacionado: 5, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da norma de Contas',
+        descricao: 'Norma sugerida e alterada pela TI. Aguardando aprovação da diretoria.'
     },
     {
-        id: 't11',
-        controleRelacionado: 17,
-        titulo: 'Playbooks de resposta a incidentes',
-        descricao: 'Desenvolvimento de playbooks para principais cenários de incidentes',
-        status: 'pendente' as const,
-        progress: 0,
-        priority: 'alto' as const,
+        id: 't3.4-2', controleRelacionado: 5, status: 'em-andamento' as const, progress: 75, priority: 'alto' as const,
+        titulo: 'Solução de cofre de senhas',
+        descricao: 'Passbolt selecionado após testes. Comparativo elaborado para aprovação.'
     },
     {
-        id: 't12',
-        controleRelacionado: 11,
-        titulo: 'Testes de backup e restore',
-        descricao: 'Testes trimestrais de recuperação de dados críticos',
-        status: 'em-andamento' as const,
-        progress: 30,
-        priority: 'alto' as const,
+        id: 't3.4-3', controleRelacionado: 5, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Implantação de MFA',
+        descricao: 'MFA habilitado em todas as aplicações com suporte.'
+    },
+    {
+        id: 't3.4-4', controleRelacionado: 5, status: 'concluido' as const, progress: 100, priority: 'medio' as const,
+        titulo: 'Inventário de contas de serviço',
+        descricao: 'Mapeamento e descrição de todas as contas de serviço no KeePass.'
+    },
+    {
+        id: 't3.4-5', controleRelacionado: 5, status: 'em-andamento' as const, progress: 20, priority: 'medio' as const,
+        titulo: 'Integração E-mail e AD',
+        descricao: 'Integração direta inviável (padronização). Foco na integração com M365.'
+    },
+
+    // 3.5. Gerenciamento de Acesso (6)
+    {
+        id: 't3.5-1', controleRelacionado: 6, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Aprovação da norma de Acesso',
+        descricao: 'Norma sugerida e alterada pela TI. Aguardando aprovação da diretoria.'
+    },
+    {
+        id: 't3.5-2', controleRelacionado: 6, status: 'pendente' as const, progress: 0, priority: 'alto' as const,
+        titulo: 'Fluxo de concessão/revogação',
+        descricao: 'Fluxos criados, aguardando aprovação formal.'
+    },
+
+    // 3.6. Proteção de E-mail (9)
+    {
+        id: 't3.6-1', controleRelacionado: 9, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Autenticação de E-mail (DMARC/DKIM)',
+        descricao: 'Configuração realizada e aplicada para o domínio manesco.com.br.'
+    },
+
+    // 3.7. Gerenciamento de Logs (8)
+    {
+        id: 't3.7-1', controleRelacionado: 8, status: 'concluido' as const, progress: 100, priority: 'alto' as const,
+        titulo: 'Implantação de SIEM (Wazuh)',
+        descricao: 'Solução Wazuh implantada para centralização de logs.'
+    },
+    {
+        id: 't3.7-2', controleRelacionado: 8, status: 'em-andamento' as const, progress: 60, priority: 'alto' as const,
+        titulo: 'Encaminhamento de logs',
+        descricao: 'Estações e servidores internos OK. Resta servidor em nuvem.'
+    },
+    {
+        id: 't3.7-3', controleRelacionado: 8, status: 'pendente' as const, progress: 0, priority: 'medio' as const,
+        titulo: 'Criação de alertas (Casos de Uso)',
+        descricao: 'Em processo de definição e implantação.'
     },
 ]
 

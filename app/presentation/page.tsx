@@ -193,7 +193,7 @@ const slides = [
   {
     type: 'pentest',
     title: 'Pentests em Aplicações',
-    subtitle: 'Resultados da avaliação automatizada (Out/25)',
+    subtitle: 'Penteste automatizado em aplicações corporativas (ref. Outubro). Escopo de 8 aplicações.',
     data: pentestApplications,
     speakerNotes: 'Avaliamos 8 aplicações críticas. A maioria apresenta riscos baixos/médios, com poucos pontos críticos pontuais.',
   },
@@ -300,8 +300,8 @@ function ContentSlide({ data }: any) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.1 }}
             className={`text-xl leading-relaxed ${item.startsWith('•') ? 'text-slate-300 pl-4' :
-                item === '' ? 'h-4' :
-                  'text-slate-200 font-medium'
+              item === '' ? 'h-4' :
+                'text-slate-200 font-medium'
               }`}
           >
             {item}
