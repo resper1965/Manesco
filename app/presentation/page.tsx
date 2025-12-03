@@ -411,7 +411,7 @@ function Slide09_RadarMaturidade() {
           value: "Repetitivo",
           label: "nível médio atual"
         }}
-        status="info"
+        status="neutral"
         height="xl"
         badge={{
           label: "Objetivo: Definido",
@@ -576,7 +576,7 @@ function Slide13_Pentest() {
             title="Aplicações Testadas"
             value={pentestSummary.totalApps}
             icon={Server}
-            status="info"
+            status="neutral"
             subtitle="Aplicações corporativas críticas"
           >
             <div className="mt-3 space-y-1.5 text-sm text-neutral-300">
@@ -648,7 +648,7 @@ function Slide15_Tarefas() {
         {/* Metrics */}
         <div className="grid grid-cols-3 gap-4 mb-2">
           <DataCard title="Concluídas" value={tarefas.filter(t => t.status === 'concluido').length} icon={CheckCircle2} status="success" />
-          <DataCard title="Em Progresso" value={tarefas.filter(t => t.status === 'em-andamento').length} icon={Activity} status="info" />
+          <DataCard title="Em Progresso" value={tarefas.filter(t => t.status === 'em-andamento').length} icon={Activity} status="neutral" />
           <DataCard title="Pendentes" value={tarefas.filter(t => t.status === 'pendente').length} icon={Clock} status="warning" />
         </div>
 
@@ -715,7 +715,7 @@ function Slide17_PontosAtencao() {
       icon={AlertTriangle}
       variant="default"
     >
-      <ContentContainer variant="stack" gap={5}>
+      <ContentContainer variant="stack" gap={6}>
         <InfoPanel variant="highlight" status="warning">
           <p className="text-base">
             Fundamentais para evoluir de <strong>"Repetitivo"</strong> para <strong>"Definido"</strong> em maturidade.
