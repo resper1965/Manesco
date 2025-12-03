@@ -604,25 +604,32 @@ function Slide10_EvolucaoMaturidade() {
     >
       <ContentContainer variant="stack" gap={4}>
         {/* Métricas */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <DataCard
             title="Início (Dez/23)"
             value={`${first.nivel}`}
             icon={Clock}
             status="neutral"
-            subtitle="Baseline inicial"
+            subtitle="Nível Inicial"
           />
           <DataCard
             title="Atual (Nov/25)"
             value={`${latest.nivel}`}
             icon={TrendingUp}
             status="success"
-            subtitle="Maturidade atual"
+            subtitle="Nível Repetitivo"
+          />
+          <DataCard
+            title="Evolução Absoluta"
+            value={`+${(latest.nivel - first.nivel).toFixed(2)}`}
+            icon={Activity}
+            status="success"
+            subtitle="Pontos de maturidade"
           />
           <DataCard
             title="Crescimento"
             value={`${crescimento}%`}
-            icon={Activity}
+            icon={Zap}
             status="success"
             subtitle="Em 23 meses"
           />
@@ -648,11 +655,26 @@ function Slide10_EvolucaoMaturidade() {
           height="md"
         />
 
-        <InfoPanel variant="bordered" status="info">
+        <div className="grid grid-cols-2 gap-4">
+          <InfoPanel variant="bordered" status="info">
+            <p className="text-sm">
+              <strong>Evolução:</strong> De <strong className="text-primary-400">1,06 (Inicial)</strong> para 
+              <strong className="text-primary-400"> 2,12 (Repetitivo)</strong> em 23 meses — 
+              <strong> +100% de crescimento</strong>.
+            </p>
+          </InfoPanel>
+          <InfoPanel variant="highlight" status="success">
+            <p className="text-sm">
+              <strong>Marco:</strong> Dobrando o nível inicial e estabelecendo processos repetitivos. 
+              Próximo objetivo: nível <strong className="text-primary-400">"Definido"</strong> (3.0).
+            </p>
+          </InfoPanel>
+        </div>
+        
+        <InfoPanel variant="bordered" status="warning">
           <p className="text-sm">
-            <strong>Insight:</strong> A maturidade evolui mais lentamente que a implementação técnica,
+            <strong>Contexto:</strong> A maturidade evolui mais lentamente que a implementação técnica (45% de aderência),
             pois depende de formalização de processos, treinamento de pessoas e governança estabelecida.
-            Evoluímos de <strong>1,06 (Inicial)</strong> para <strong>2,12 (Repetitivo)</strong>.
           </p>
         </InfoPanel>
       </ContentContainer>
@@ -1506,7 +1528,7 @@ function Slide26_MockupSOC() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-neutral-50">Security Operations Center</h3>
-                <p className="text-sm text-neutral-400">Monitoramento 24×7 em tempo real</p>
+                <p className="text-sm text-neutral-400">Manesco Advogados - Monitoramento 24×7 em tempo real</p>
               </div>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
@@ -1518,19 +1540,19 @@ function Slide26_MockupSOC() {
           {/* Dashboard Metrics */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
-              <div className="text-xs text-neutral-400 mb-1">Alertas Hoje</div>
-              <div className="text-2xl font-bold text-neutral-50">12</div>
-              <div className="text-xs text-green-400 mt-1">↓ 23% vs ontem</div>
+              <div className="text-xs text-neutral-400 mb-1">Vulnerabilidades Ativas</div>
+              <div className="text-2xl font-bold text-neutral-50">406</div>
+              <div className="text-xs text-green-400 mt-1">↓ 47% vs Set/25</div>
             </div>
             <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
-              <div className="text-xs text-neutral-400 mb-1">Eventos/min</div>
-              <div className="text-2xl font-bold text-neutral-50">1.2K</div>
-              <div className="text-xs text-green-400 mt-1">Normal</div>
+              <div className="text-xs text-neutral-400 mb-1">Vulnerabilidades Críticas</div>
+              <div className="text-2xl font-bold text-red-400">22</div>
+              <div className="text-xs text-green-400 mt-1">↓ 94% vs Set/25</div>
             </div>
             <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
               <div className="text-xs text-neutral-400 mb-1">Assets Monitorados</div>
               <div className="text-2xl font-bold text-neutral-50">166</div>
-              <div className="text-xs text-green-400 mt-1">100% cobertura</div>
+              <div className="text-xs text-green-400 mt-1">15 servidores + 151 estações</div>
             </div>
             <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
               <div className="text-xs text-neutral-400 mb-1">Tempo Médio Resposta</div>
@@ -1548,23 +1570,23 @@ function Slide26_MockupSOC() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 rounded-full bg-green-500" />
-                <span className="text-neutral-400">14:32</span>
-                <span className="text-neutral-300">Threat bloqueado: Malware detectado em endpoint SRV-05</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                <span className="text-neutral-400">14:15</span>
-                <span className="text-neutral-300">Anomalia detectada: Acesso não autorizado bloqueado</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                <span className="text-neutral-400">13:58</span>
-                <span className="text-neutral-300">Patch aplicado: 15 sistemas atualizados com sucesso</span>
+                <span className="text-neutral-400">Hoje 14:32</span>
+                <span className="text-neutral-300">Varredura mensal concluída: 166 assets analisados</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 rounded-full bg-green-500" />
-                <span className="text-neutral-400">13:42</span>
-                <span className="text-neutral-300">Varredura completa: 0 vulnerabilidades críticas encontradas</span>
+                <span className="text-neutral-400">Hoje 10:15</span>
+                <span className="text-neutral-300">Redução de 47% no total de vulnerabilidades (771 → 406)</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-neutral-400">Hoje 09:30</span>
+                <span className="text-neutral-300">Monitoramento CIS Controls: 18 controles ativos</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-neutral-400">Hoje 08:00</span>
+                <span className="text-neutral-300">Relatório diário gerado: Todos os sistemas operacionais</span>
               </div>
             </div>
           </div>
