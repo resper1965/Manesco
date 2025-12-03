@@ -100,8 +100,37 @@ const slideSections = [
   { title: 'Pentests', startIndex: 12, endIndex: 12, icon: <FileSearch className="w-4 h-4" /> },
   { title: 'Tarefas', startIndex: 13, endIndex: 15, icon: <CheckSquare className="w-4 h-4" /> },
   { title: 'Pontos de Atenção', startIndex: 16, endIndex: 17, icon: <AlertCircle className="w-4 h-4" /> },
-  { title: 'n.secops', startIndex: 18, endIndex: 25, icon: <ShieldCheck className="w-4 h-4" /> },
+  { title: 'n.secops', startIndex: 18, endIndex: 26, icon: <ShieldCheck className="w-4 h-4" /> },
 ]
+
+// Helper para renderizar n.secops e ness. com ponto colorido
+function NsecopsText() {
+  return (
+    <>
+      <span>n</span>
+      <span className="text-[#00ade8]">.</span>
+      <span>secops</span>
+    </>
+  )
+}
+
+function NessText() {
+  return (
+    <>
+      <span>ness</span>
+      <span className="text-[#00ade8]">.</span>
+    </>
+  )
+}
+
+function TrustnessText() {
+  return (
+    <>
+      <span>trustness</span>
+      <span className="text-[#00ade8]">.</span>
+    </>
+  )
+}
 
 // ========== SLIDE 1: LOGO TRUSTNESS ==========
 function Slide01_LogoTrustness() {
@@ -1055,58 +1084,25 @@ function Slide17_PontosAtencao() {
 
 // ========== SLIDE 18: DIVISOR NSECOPS ==========
 function Slide18_DivisorNsecops() {
-  return <SectionDivider title="n.secops" subtitle="Serviços de Segurança Gerenciada" />
+  return <SectionDivider title={<NsecopsText />} subtitle="Serviços de Segurança Gerenciada" />
 }
 
 // ========== SLIDE 19: VISÃO GERAL NSECOPS ==========
 function Slide19_VisaoGeralNsecops() {
   return (
     <SlideLayout
-      title="n.secops"
-      subtitle="Serviço de segurança gerenciada 24×7"
+      title={<NsecopsText />}
+      subtitle="Segurança gerenciada para organizações que precisam reduzir risco e tempo de resposta (24/7)"
       icon={ShieldCheck}
       variant="default"
     >
       <ContentContainer variant="stack" gap={6}>
         <InfoPanel variant="glassmorphic" status="info">
           <p className="text-xl leading-relaxed">
-            Serviço de segurança gerenciada <strong className="text-primary-400">24×7</strong> para reduzir 
-            risco e tempo de resposta a incidentes.
-          </p>
-        </InfoPanel>
-
-        <div className="grid grid-cols-2 gap-6">
-          <DataCard
-            title="Redução de Tempo de Detecção"
-            value="Semanas → Minutos"
-            subtitle="Intervalo entre invasão e detecção"
-            icon={Zap}
-            status="success"
-          >
-            <p className="text-sm text-neutral-400 mt-3">
-              Focado em diminuir o intervalo entre invasão e detecção de semanas para minutos, 
-              com equipe especializada operando continuamente.
-            </p>
-          </DataCard>
-
-          <DataCard
-            title="Operação Contínua"
-            value="24×7"
-            subtitle="Monitoramento ininterrupto"
-            icon={Eye}
-            status="success"
-          >
-            <p className="text-sm text-neutral-400 mt-3">
-              Equipe especializada em segurança operando continuamente para garantir proteção 
-              proativa e resposta rápida a incidentes.
-            </p>
-          </DataCard>
-        </div>
-
-        <InfoPanel variant="highlight" status="success">
-          <p className="text-lg">
-            <strong>Benefícios:</strong> Redução significativa de risco, detecção proativa de ameaças, 
-            resposta rápida a incidentes e visibilidade completa do ambiente de segurança.
+            Operação contínua de segurança com <strong className="text-primary-400">SOC 24×7</strong>, 
+            <strong className="text-primary-400"> EDR/AV</strong>, <strong className="text-primary-400">patching</strong> e 
+            <strong className="text-primary-400"> gestão de vulnerabilidades</strong> — com evidências acionáveis para 
+            auditorias e tomada de decisão.
           </p>
         </InfoPanel>
       </ContentContainer>
@@ -1425,6 +1421,117 @@ function Slide25_Threat_Relatorios() {
   )
 }
 
+// ========== SLIDE 26: MOCKUP SOC - FECHAMENTO ==========
+function Slide26_MockupSOC() {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen px-8 relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Content */}
+      <div className="z-10 w-full max-w-7xl space-y-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-4"
+        >
+          <h1 className="text-6xl md:text-7xl font-montserrat font-medium tracking-tight">
+            <span className="text-neutral-50">trustness</span>
+            <span className="text-[#00ade8]">.</span>
+          </h1>
+          <p className="text-2xl text-neutral-400">
+            a <span className="text-neutral-300">ness</span><span className="text-[#00ade8]">.</span> company
+          </p>
+        </motion.div>
+
+        {/* Mockup SOC Dashboard */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="bg-neutral-900/80 backdrop-blur-sm border border-neutral-800 rounded-2xl p-6 shadow-2xl"
+        >
+          {/* Dashboard Header */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-800">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
+                <Eye className="w-5 h-5 text-primary-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-neutral-50">Security Operations Center</h3>
+                <p className="text-sm text-neutral-400">Monitoramento 24×7 em tempo real</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-sm text-green-400 font-medium">Operacional</span>
+            </div>
+          </div>
+
+          {/* Dashboard Metrics */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
+              <div className="text-xs text-neutral-400 mb-1">Alertas Hoje</div>
+              <div className="text-2xl font-bold text-neutral-50">12</div>
+              <div className="text-xs text-green-400 mt-1">↓ 23% vs ontem</div>
+            </div>
+            <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
+              <div className="text-xs text-neutral-400 mb-1">Eventos/min</div>
+              <div className="text-2xl font-bold text-neutral-50">1.2K</div>
+              <div className="text-xs text-green-400 mt-1">Normal</div>
+            </div>
+            <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
+              <div className="text-xs text-neutral-400 mb-1">Assets Monitorados</div>
+              <div className="text-2xl font-bold text-neutral-50">166</div>
+              <div className="text-xs text-green-400 mt-1">100% cobertura</div>
+            </div>
+            <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
+              <div className="text-xs text-neutral-400 mb-1">Tempo Médio Resposta</div>
+              <div className="text-2xl font-bold text-primary-400">3 min</div>
+              <div className="text-xs text-green-400 mt-1">Meta: &lt;5min</div>
+            </div>
+          </div>
+
+          {/* Activity Timeline */}
+          <div className="bg-neutral-800/50 rounded-xl p-4 border border-neutral-700/50">
+            <h4 className="text-sm font-semibold text-neutral-300 mb-4 flex items-center gap-2">
+              <Activity className="w-4 h-4" />
+              Atividades Recentes
+            </h4>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-neutral-400">14:32</span>
+                <span className="text-neutral-300">Threat bloqueado: Malware detectado em endpoint SRV-05</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                <span className="text-neutral-400">14:15</span>
+                <span className="text-neutral-300">Anomalia detectada: Acesso não autorizado bloqueado</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-neutral-400">13:58</span>
+                <span className="text-neutral-300">Patch aplicado: 15 sistemas atualizados com sucesso</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-neutral-400">13:42</span>
+                <span className="text-neutral-300">Varredura completa: 0 vulnerabilidades críticas encontradas</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
 // Main Component
 export default function ProfessionalPresentation() {
   const [current, setCurrent] = useState(0)
@@ -1462,6 +1569,7 @@ export default function ProfessionalPresentation() {
     { component: Slide23_Patch_Hardening, notes: 'Patch Management e Hardening - Manutenção e configuração segura' },
     { component: Slide24_Inventario_Incident, notes: 'Inventário de Ativos e Incident Response' },
     { component: Slide25_Threat_Relatorios, notes: 'Threat Intelligence e Relatórios Executivos' },
+    { component: Slide26_MockupSOC, notes: 'Mockup SOC - Fechamento da apresentação' },
   ]
 
   const nextSlide = () => {

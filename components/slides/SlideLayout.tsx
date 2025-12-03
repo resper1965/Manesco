@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { designTokens } from '@/lib/design-tokens'
 
 interface SlideLayoutProps {
-  title: string
+  title: string | ReactNode
   subtitle?: string
   icon?: LucideIcon
   children: ReactNode

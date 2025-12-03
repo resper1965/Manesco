@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 
 interface SectionDividerProps {
-    title: string
+    title: string | React.ReactNode
     subtitle?: string
     className?: string
 }
