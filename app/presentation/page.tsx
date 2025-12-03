@@ -303,16 +303,17 @@ function Slide03_ContextualizacaoCIS() {
 function Slide04_Lista18Controles() {
   const trabalhados = cisControls.filter(c => c.worked && !c.excluded).length
   const total = cisControls.filter(c => !c.excluded).length
+  const totalControles = cisControls.length // Deve ser 18
   
   return (
     <SlideLayout
       title="Escopo CIS v8.1 - IG2"
-      subtitle={`18 Controles de Segurança • ${trabalhados} em foco`}
+      subtitle={`${totalControles} Controles de Segurança • ${trabalhados} em foco`}
       icon={Target}
       variant="default"
-      className="p-8"
+      className="p-6"
     >
-      <div className="flex flex-col h-full gap-4">
+      <div className="flex flex-col h-full gap-3">
         {/* Legenda */}
         <div className="flex items-center gap-6 text-xs shrink-0">
           <div className="flex items-center gap-2">
@@ -330,7 +331,7 @@ function Slide04_Lista18Controles() {
         </div>
 
         {/* Grid de controles */}
-        <div className="flex-1 overflow-hidden min-h-0">
+        <div className="flex-1 overflow-y-auto min-h-0 pr-2 custom-scrollbar">
           <CISControlsGrid controls={cisControls} />
         </div>
       </div>

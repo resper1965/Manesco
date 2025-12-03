@@ -19,7 +19,7 @@ interface CISControlsGridProps {
 
 export function CISControlsGrid({ controls }: CISControlsGridProps) {
     return (
-        <div className="grid grid-cols-3 gap-3 h-full auto-rows-fr">
+        <div className="grid grid-cols-3 gap-2.5 auto-rows-min">
             {controls.map((control, index) => (
                 <motion.div
                     key={control.id}
@@ -27,8 +27,8 @@ export function CISControlsGrid({ controls }: CISControlsGridProps) {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ delay: index * 0.02, duration: 0.3 }}
                     className={`
-                        relative flex flex-col p-3 rounded-xl border-2
-                        backdrop-blur-sm transition-all duration-300 group
+                        relative flex flex-col p-2.5 rounded-lg border-2
+                        backdrop-blur-sm transition-all duration-300 group min-h-[100px]
                         ${control.excluded 
                             ? 'bg-neutral-900/20 border-neutral-800/40 opacity-40 grayscale' 
                             : control.worked
@@ -39,7 +39,7 @@ export function CISControlsGrid({ controls }: CISControlsGridProps) {
                 >
                     {/* Número do controle - Badge superior esquerdo */}
                     <div className={`
-                        absolute -top-2 -left-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold z-10
+                        absolute -top-1.5 -left-1.5 w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold z-10
                         shadow-lg transition-all duration-300
                         ${control.excluded 
                             ? 'bg-neutral-800 text-neutral-600 border-2 border-neutral-700' 
@@ -69,9 +69,9 @@ export function CISControlsGrid({ controls }: CISControlsGridProps) {
                     )}
 
                     {/* Conteúdo principal */}
-                    <div className="flex-1 flex flex-col pt-6 pb-2">
+                    <div className="flex-1 flex flex-col pt-5 pb-1.5">
                         <p className={`
-                            text-xs leading-tight font-medium flex-1
+                            text-[11px] leading-tight font-medium flex-1
                             ${control.excluded 
                                 ? 'text-neutral-600 line-through' 
                                 : control.worked
@@ -85,10 +85,10 @@ export function CISControlsGrid({ controls }: CISControlsGridProps) {
 
                     {/* Rodapé com status */}
                     {control.worked && !control.excluded && (
-                        <div className="mt-2 pt-2 border-t border-primary-500/30">
-                            <div className="flex items-center justify-center gap-1.5">
-                                <CheckCircle2 className="w-3 h-3 text-primary-400" />
-                                <span className="text-[10px] text-primary-400 font-semibold uppercase tracking-wide">
+                        <div className="mt-1.5 pt-1.5 border-t border-primary-500/30">
+                            <div className="flex items-center justify-center gap-1">
+                                <CheckCircle2 className="w-2.5 h-2.5 text-primary-400" />
+                                <span className="text-[9px] text-primary-400 font-semibold uppercase tracking-wide">
                                     Em Foco
                                 </span>
                             </div>
@@ -96,8 +96,8 @@ export function CISControlsGrid({ controls }: CISControlsGridProps) {
                     )}
 
                     {control.excluded && (
-                        <div className="mt-2 pt-2 border-t border-neutral-800/50">
-                            <span className="text-[10px] text-neutral-600 font-medium uppercase tracking-wide block text-center">
+                        <div className="mt-1.5 pt-1.5 border-t border-neutral-800/50">
+                            <span className="text-[9px] text-neutral-600 font-medium uppercase tracking-wide block text-center">
                                 Excluído
                             </span>
                         </div>
