@@ -1,16 +1,7 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, PolarRadiusAxis } from "recharts"
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import {
     ChartConfig,
     ChartContainer,
@@ -26,6 +17,7 @@ interface MaturityRadarProps {
         nivel: string
         valor: number
     }>
+    controleNames?: Record<number, string>
 }
 
 const chartConfig = {
@@ -35,30 +27,33 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function MaturityRadar({ data }: MaturityRadarProps) {
-    // Transform data for the chart
-    const chartData = data.map(d => ({
-        subject: `CIS ${d.controleId}`,
-        valor: d.valor,
-        fullMark: 100
-    }))
+export function MaturityRadar({ data, controleNames }: MaturityRadarProps) {
+    // Transform data for the chart - usar nome do controle se disponível
+    const chartData = data.map(d => {
+        const nomeControle = controleNames?.[d.controleId]
+        
+        return {
+            subject: `CIS ${d.controleId}`, // Mostrar apenas número no eixo
+            nomeControle: nomeControle || '', // Nome completo para tooltip
+            valor: d.valor,
+            fullMark: 100
+        }
+    })
 
     return (
-        <Card className="bg-slate-950 border-slate-800 h-full flex flex-col">
-            <CardHeader className="items-center pb-4">
-                <CardTitle className="text-slate-100">Radar de Maturidade</CardTitle>
-                <CardDescription className="text-slate-400">
-                    Nível de implementação por controle (%)
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="pb-0 flex-1 flex items-center justify-center">
+        <div className="h-full flex gap-6 p-4">
+            {/* Radar Chart */}
+            <div className="flex-1 flex items-center justify-center min-w-0">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[400px] w-full"
+                    className="mx-auto aspect-square max-h-full w-full"
                 >
                     <RadarChart data={chartData}>
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                        <PolarAngleAxis 
+                            dataKey="subject" 
+                            tick={{ fill: '#94a3b8', fontSize: 11 }}
+                        />
                         <PolarGrid stroke="#334155" />
                         <Radar
                             dataKey="valor"
@@ -70,15 +65,37 @@ export function MaturityRadar({ data }: MaturityRadarProps) {
                         <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                     </RadarChart>
                 </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm pt-4">
-                <div className="flex items-center gap-2 leading-none font-medium text-slate-300">
-                    Média geral de maturidade: <span className="text-blue-500">45%</span> <TrendingUp className="h-4 w-4 text-blue-500" />
+            </div>
+
+            {/* Índice de Controles */}
+            {controleNames && Object.keys(controleNames).length > 0 && (
+                <div className="w-64 flex-shrink-0 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="space-y-1.5">
+                        <h4 className="text-sm font-semibold text-neutral-300 mb-3 sticky top-0 bg-neutral-950/80 backdrop-blur-sm py-2">
+                            Índice de Controles
+                        </h4>
+                        {chartData.map((item, index) => {
+                            const controleId = data[index]?.controleId
+                            const nome = controleNames[controleId] || ''
+                            if (!nome) return null
+                            
+                            return (
+                                <div 
+                                    key={controleId}
+                                    className="flex items-start gap-2 p-2 rounded-lg bg-neutral-900/50 border border-neutral-800/50 hover:border-primary-500/30 transition-colors"
+                                >
+                                    <span className="text-xs font-bold text-primary-400 shrink-0 min-w-[2.5rem]">
+                                        {item.subject}
+                                    </span>
+                                    <span className="text-xs text-neutral-400 leading-tight">
+                                        {nome}
+                                    </span>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
-                <div className="text-slate-500 flex items-center gap-2 leading-none">
-                    Novembro 2025
-                </div>
-            </CardFooter>
-        </Card>
+            )}
+        </div>
     )
 }

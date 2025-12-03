@@ -33,7 +33,8 @@ import {
   Clock,
   Server,
   Laptop,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -106,10 +107,10 @@ function Slide01_LogoTrustness() {
         {/* Logo */}
         <div className="relative p-16 rounded-3xl bg-gradient-to-br from-primary-500/10 to-primary-600/5 border-2 border-primary-500/30">
           <div className="text-center space-y-6">
-            <Shield className="w-32 h-32 text-primary-400 mx-auto" strokeWidth={1.5} />
             <div className="space-y-2">
-              <h1 className="text-6xl font-bold text-neutral-50 tracking-tight">
-                trust<span className="text-primary-400">ness</span>
+              <h1 className="text-7xl md:text-8xl font-bold tracking-tight">
+                <span className="text-neutral-50">trustness</span>
+                <span className="text-[#00ade8]">.</span>
               </h1>
               <p className="text-xl text-neutral-400">Security by Design</p>
             </div>
@@ -473,29 +474,22 @@ function Slide08_ControlesTrabalhados() {
 
 // ========== SLIDE 9: RADAR MATURIDADE ==========
 function Slide09_RadarMaturidade() {
+  // Criar objeto de nomes dos controles
+  const controleNames: Record<number, string> = {}
+  cisStatusData.forEach(c => {
+    controleNames[c.id] = c.name
+  })
+  
   return (
     <SlideLayout
       title="Maturidade por Controle"
-      subtitle="Análise de maturidade individual"
+      subtitle="Nível de implementação por controle CIS"
       icon={Activity}
       variant="default"
     >
-      <ChartCard
-        title="Radar de Maturidade"
-        subtitle="Nível de implementação por controle CIS"
-        icon={Activity}
-        chart={<MaturityRadar data={currentMaturity} />}
-        insight={{
-          value: "Repetitivo",
-          label: "nível médio atual"
-        }}
-        status="neutral"
-        height="xl"
-        badge={{
-          label: "Objetivo: Definido",
-          variant: "default"
-        }}
-      />
+      <div className="h-full">
+        <MaturityRadar data={currentMaturity} controleNames={controleNames} />
+      </div>
     </SlideLayout>
   )
 }
@@ -711,6 +705,8 @@ function Slide14_DivisorTarefas() {
 
 // ========== SLIDE 15: TAREFAS ==========
 function Slide15_Tarefas() {
+  const [selectedTarefa, setSelectedTarefa] = useState<typeof tarefas[0] | null>(null)
+  
   const concluidas = tarefas.filter(t => t.status === 'concluido' && t.priority === 'alto').slice(0, 4)
   const emAndamento = tarefas.filter(t => t.status === 'em-andamento' && t.priority === 'alto')
   const pendentes = tarefas.filter(t => t.status === 'pendente' && t.priority === 'alto').slice(0, 4)
@@ -738,7 +734,11 @@ function Slide15_Tarefas() {
               <CheckCircle2 className="w-4 h-4" />Concluídas
             </h3>
             {concluidas.map(t => (
-              <div key={t.id} className="p-2.5 rounded bg-green-500/5 border border-green-500/20">
+              <div 
+                key={t.id} 
+                onClick={() => setSelectedTarefa(t)}
+                className="p-2.5 rounded bg-green-500/5 border border-green-500/20 cursor-pointer hover:bg-green-500/10 transition-colors"
+              >
                 <p className="text-xs font-medium text-neutral-100">{t.titulo}</p>
               </div>
             ))}
@@ -750,7 +750,11 @@ function Slide15_Tarefas() {
               <Activity className="w-4 h-4" />Em Progresso
             </h3>
             {emAndamento.map(t => (
-              <div key={t.id} className="p-2.5 rounded bg-blue-500/5 border border-blue-500/20">
+              <div 
+                key={t.id} 
+                onClick={() => setSelectedTarefa(t)}
+                className="p-2.5 rounded bg-blue-500/5 border border-blue-500/20 cursor-pointer hover:bg-blue-500/10 transition-colors"
+              >
                 <p className="text-xs font-medium text-neutral-100 mb-1.5">{t.titulo}</p>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
@@ -768,13 +772,121 @@ function Slide15_Tarefas() {
               <Clock className="w-4 h-4" />Pendentes
             </h3>
             {pendentes.map(t => (
-              <div key={t.id} className="p-2.5 rounded bg-yellow-500/5 border border-yellow-500/20">
+              <div 
+                key={t.id} 
+                onClick={() => setSelectedTarefa(t)}
+                className="p-2.5 rounded bg-yellow-500/5 border border-yellow-500/20 cursor-pointer hover:bg-yellow-500/10 transition-colors"
+              >
                 <p className="text-xs font-medium text-neutral-100">{t.titulo}</p>
               </div>
             ))}
           </div>
         </div>
       </ContentContainer>
+
+      {/* Modal de Detalhes da Tarefa */}
+      <AnimatePresence>
+        {selectedTarefa && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedTarefa(null)}
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            />
+            
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-neutral-900 rounded-2xl border border-neutral-800 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+                {/* Header */}
+                <div className="p-6 border-b border-neutral-800 flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      {selectedTarefa.status === 'pendente' && (
+                        <div className="px-2.5 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+                          <span className="text-xs font-medium text-yellow-400">Pendente</span>
+                        </div>
+                      )}
+                      {selectedTarefa.status === 'em-andamento' && (
+                        <div className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                          <span className="text-xs font-medium text-blue-400">Em Andamento</span>
+                        </div>
+                      )}
+                      {selectedTarefa.status === 'concluido' && (
+                        <div className="px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+                          <span className="text-xs font-medium text-green-400">Concluída</span>
+                        </div>
+                      )}
+                      {selectedTarefa.priority === 'alto' && (
+                        <div className="px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20">
+                          <span className="text-xs font-medium text-red-400">Alta Prioridade</span>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="text-xl font-semibold text-neutral-50">
+                      {selectedTarefa.titulo}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setSelectedTarefa(null)}
+                    className="p-2 rounded-lg hover:bg-neutral-800 transition-colors text-neutral-400 hover:text-neutral-100"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 overflow-y-auto flex-1">
+                  <div className="space-y-4">
+                    {/* Descrição - O que está bloqueando */}
+                    {selectedTarefa.descricao && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-neutral-300 mb-2 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                          {selectedTarefa.status === 'pendente' ? 'O que está bloqueando?' : 'Detalhes'}
+                        </h4>
+                        <p className="text-sm text-neutral-400 leading-relaxed bg-neutral-800/50 p-4 rounded-lg border border-neutral-800">
+                          {selectedTarefa.descricao}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Progresso */}
+                    {selectedTarefa.status === 'em-andamento' && selectedTarefa.progress !== undefined && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-semibold text-neutral-300">Progresso</span>
+                          <span className="text-sm font-bold text-blue-400">{selectedTarefa.progress}%</span>
+                        </div>
+                        <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-blue-500 transition-all duration-300" 
+                            style={{ width: `${selectedTarefa.progress}%` }} 
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Controle relacionado */}
+                    <div>
+                      <span className="text-sm font-semibold text-neutral-300">Controle CIS Relacionado: </span>
+                      <span className="text-sm text-primary-400">CIS {selectedTarefa.controleRelacionado}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </SlideLayout>
   )
 }
