@@ -3,19 +3,47 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut, ShieldCheck, AlertTriangle, Activity } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Volume2,
+  VolumeX,
+  LogOut,
+  Shield,
+  Target,
+  TrendingUp,
+  BookOpen,
+  AlertTriangle,
+  FileText,
+  CheckSquare,
+  Users,
+  Settings,
+  Lock,
+  Mail,
+  FileSearch,
+  Laptop,
+  Server,
+  Globe,
+  Award,
+  Activity
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BrandWordmark } from '@/components/ui/brand-dot'
 
-// Components
+// Original Components
 import { CISControlsTable } from '@/components/presentation/cis-controls-table'
 import { MaturityRadar } from '@/components/presentation/maturity-radar'
 import { EvolutionTimeline } from '@/components/presentation/evolution-timeline'
 import { VulnerabilityEvolutionChart } from '@/components/presentation/vulnerability-chart'
-import { PentestGrid } from '@/components/presentation/pentest-grid'
-import { TaskStatusGrid } from '@/components/presentation/task-status-grid'
 import { SectionDivider } from '@/components/presentation/section-divider'
 import { CisStatusChart } from '@/components/presentation/cis-status-chart'
+
+// New Enhanced Components
+import { ExecutiveOverview } from '@/components/presentation/executive-overview'
+import { ImprovedTaskGrid } from '@/components/presentation/improved-task-grid'
+import { ImprovedPentestGrid } from '@/components/presentation/improved-pentest-grid'
+import { VulnerabilityMetrics } from '@/components/presentation/vulnerability-metrics'
+import { EnhancedContentSlide } from '@/components/presentation/enhanced-content-slide'
 
 // Data
 import {
@@ -30,60 +58,78 @@ import {
   implementationEvolution,
   maturityEvolution,
   statusVsReference,
-  workedEvolution
+  workedEvolution,
+  vulnerabilityScanScope,
+  tarefas
 } from '@/lib/presentation-data'
 
 // Slides Configuration
 const slides = [
-  // SLIDE 1: Capa
+  // SLIDE 1: Capa Redesenhada
   {
     type: 'title',
     title: 'Governança de Segurança da Informação',
-    subtitle: 'Status de Implementação | Manesco | Novembro 2025',
-    speakerNotes: 'Bem-vindos. Hoje apresentaremos o status atual da governança de segurança, seguindo o framework CIS Controls IG2.',
+    subtitle: 'Status de Implementação CIS Controls IG2',
+    client: 'Manesco',
+    date: 'Novembro 2025',
+    speakerNotes: 'Bem-vindos. Apresentação executiva do status atual da governança de segurança, seguindo o framework CIS Controls IG2.',
   },
 
-  // SLIDE 2: Intro
+  // SLIDE 2: Overview Executivo (NOVO)
   {
-    type: 'content',
+    type: 'executive-overview',
+    title: 'Visão Executiva',
+    speakerNotes: 'Visão geral dos principais KPIs: 45% de aderência ao IG2, 8 controles ativos, e progresso significativo na gestão de vulnerabilidades.',
+  },
+
+  // SLIDE 3: Agenda Redesenhada
+  {
+    type: 'enhanced-content',
     title: 'Agenda',
+    icon: BookOpen,
     items: [
-      '• Framework CIS Controls e Grupos de Implementação',
-      '• Status da Aderência ao IG2',
-      '• Gestão de Vulnerabilidades e Pentests',
-      '• Status das Tarefas Prioritárias',
-      '• Pontos de Atenção e Próximos Passos'
+      { text: 'Framework CIS Controls e Grupos de Implementação', icon: Shield },
+      { text: 'Status da Aderência ao IG2', icon: Target },
+      { text: 'Gestão de Vulnerabilidades e Pentests', icon: AlertTriangle },
+      { text: 'Status das Tarefas Prioritárias', icon: CheckSquare },
+      { text: 'Pontos de Atenção e Próximos Passos', icon: TrendingUp }
     ],
+    layout: 'list',
     speakerNotes: 'Nossa agenda cobre desde a metodologia até os resultados práticos e próximos passos.',
   },
 
-  // SLIDE 3: Conceito CIS
+  // SLIDE 4: Conceito CIS Redesenhado
   {
-    type: 'content',
+    type: 'enhanced-content',
     title: 'Framework CIS Controls',
+    subtitle: 'Padrão global de defesa cibernética',
+    icon: Award,
     items: [
-      'O CIS Controls é um conjunto de práticas recomendadas para defesa cibernética.',
+      { text: 'O CIS Controls é um conjunto de práticas recomendadas para defesa cibernética, desenvolvido por especialistas globais.', highlight: true },
       '',
-      'Grupos de Implementação (IGs):',
-      '• IG1: Higiene básica cibernética (Pequenas/Médias empresas)',
-      '• IG2: Organizações com dados sensíveis e infraestrutura complexa',
-      '• IG3: Organizações com alta criticidade (Alvos sofisticados)',
+      { text: 'IG1: Higiene básica cibernética', icon: Server },
+      { text: 'IG2: Dados sensíveis e infraestrutura complexa', icon: Shield, highlight: true },
+      { text: 'IG3: Alta criticidade e alvos sofisticados', icon: Lock },
     ],
+    layout: 'list',
     speakerNotes: 'O CIS é o padrão ouro. O IG2 é o nível adequado para a complexidade e responsabilidade da Manesco.',
   },
 
-  // SLIDE 4: Contexto Manesco
+  // SLIDE 5: Contexto Manesco Redesenhado
   {
-    type: 'content',
+    type: 'enhanced-content',
     title: 'Por que IG2 para Manesco?',
+    subtitle: 'Adequação ao perfil e necessidades',
+    icon: Target,
     items: [
-      '• Infraestrutura de TI desenvolvida',
-      '• Necessidade de proteção de dados sensíveis',
-      '• Requisito de monitoramento contínuo',
-      '• Controle de acessos avançado',
+      { text: 'Infraestrutura de TI desenvolvida e diversificada', icon: Laptop },
+      { text: 'Proteção de dados sensíveis e confidenciais', icon: Lock },
+      { text: 'Monitoramento contínuo e resposta a ameaças', icon: Activity },
+      { text: 'Controle de acessos avançado e gestão de identidades', icon: Users },
       '',
-      'O IG2 estabelece uma base sólida de segurança e governança.',
+      { text: 'O IG2 estabelece uma base sólida de segurança e governança adequada ao porte e responsabilidade da organização.', highlight: true }
     ],
+    layout: 'grid',
     speakerNotes: 'Escolhemos o IG2 pois ele equilibra proteção robusta com viabilidade operacional para o perfil da Manesco.',
   },
 
@@ -163,97 +209,140 @@ const slides = [
   {
     type: 'divider',
     title: 'Gestão de Vulnerabilidades',
-    subtitle: 'Scans, Análises e Correções',
+    subtitle: 'Scans, Análises e Correções Contínuas',
   },
 
-  // SLIDE 14: Vuln Mensal
+  // SLIDE 14: Vulnerability Metrics Dashboard (NOVO)
+  {
+    type: 'vuln-metrics',
+    title: 'Panorama de Vulnerabilidades',
+    subtitle: 'Métricas e indicadores atuais',
+    speakerNotes: 'Dashboard completo mostrando 406 vulnerabilidades ativas, com 47% já tratadas. Foco na redução das 22 críticas e 86 altas.',
+  },
+
+  // SLIDE 15: Vuln Evolução
   {
     type: 'vuln-chart',
-    title: 'Vulnerabilidades: Novas vs Tratadas',
-    subtitle: 'Evolução mensal (Servidores e Estações)',
+    title: 'Evolução: Novas vs Tratadas',
+    subtitle: 'Tendência mensal de tratamento (Set/25 - Out/25)',
     data: vulnerabilityEvolution,
-    speakerNotes: 'Tivemos um pico em Setembro com a retomada dos scans, mas a capacidade de tratamento (linha verde) está acompanhando.',
+    speakerNotes: 'Tivemos baseline de 771 em Setembro. Em Outubro, tratamos 418 vulnerabilidades, reduzindo o total para 406. Capacidade de tratamento está efetiva.',
   },
 
-  // SLIDE 15: Vuln Total
+  // SLIDE 16: Vuln Trend
   {
-    type: 'vuln-trend', // Reusing vuln chart for trend or creating specific view
-    title: 'Total de Vulnerabilidades Ativas',
-    subtitle: 'Tendência de redução do backlog',
+    type: 'vuln-chart',
+    title: 'Redução de Vulnerabilidades Críticas',
+    subtitle: 'De 345 para 22 críticas em 30 dias',
     data: totalVulnerabilitiesTrend.map(t => ({
       mes: t.periodo,
       total: t.total,
-      novas: t.criticas + t.altas, // Proxy visualization
+      novas: t.criticas + t.altas,
       tratadas: 0
     })),
-    speakerNotes: 'O backlog total está caindo, indicando que estamos corrigindo mais rápido do que novas falhas aparecem.',
+    speakerNotes: 'Progresso significativo: redução de 94% nas vulnerabilidades críticas (de 345 para 22), demonstrando efetividade do programa.',
   },
 
-  // SLIDE 16: Pentest Grid
-  {
-    type: 'pentest',
-    title: 'Pentests em Aplicações',
-    subtitle: 'Penteste automatizado em aplicações corporativas (ref. Outubro). Escopo de 8 aplicações.',
-    data: pentestApplications,
-    speakerNotes: 'Avaliamos 8 aplicações críticas. A maioria apresenta riscos baixos/médios, com poucos pontos críticos pontuais.',
-  },
-
-  // SLIDE 17: Divisor Tarefas
+  // SLIDE 17: Divisor Pentests
   {
     type: 'divider',
-    title: 'Status das Tarefas',
-    subtitle: 'Acompanhamento do Plano de Ação',
+    title: 'Testes de Penetração',
+    subtitle: 'Avaliação de Segurança Aplicacional',
   },
 
-  // SLIDE 18-23: Tarefas (Divided by status/priority logic for presentation flow)
+  // SLIDE 18: Pentest Grid Melhorado
   {
-    type: 'tasks',
-    title: 'Tarefas Concluídas (High Impact)',
+    type: 'improved-pentest',
+    title: 'Resultados de Pentests',
+    subtitle: '8 aplicações corporativas avaliadas | Referência: Outubro 2025',
+    data: pentestApplications,
+    speakerNotes: 'Pentest consolidado em 8 aplicações críticas resultou em 75 vulnerabilidades: 5 altas, 21 médias, 49 baixas. Nenhuma crítica, indicando boa postura de segurança aplicacional.',
+  },
+
+  // SLIDE 19: Divisor Tarefas
+  {
+    type: 'divider',
+    title: 'Plano de Ação',
+    subtitle: 'Roadmap de Implementação e Progresso',
+  },
+
+  // SLIDE 20: Tarefas Concluídas
+  {
+    type: 'improved-tasks',
+    title: 'Entregas Concluídas',
+    subtitle: 'Marcos importantes já alcançados',
     tasks: tarefasPorStatus.concluidas,
-    speakerNotes: 'Entregas importantes: SIEM, Scans Automáticos e Hardening de servidores.',
-  },
-  {
-    type: 'tasks',
-    title: 'Tarefas em Andamento (1/2)',
-    tasks: tarefasPorStatus.emAndamento.slice(0, 3),
-    speakerNotes: 'Estamos focados agora na classificação de dados e proteção de rede.',
-  },
-  {
-    type: 'tasks',
-    title: 'Tarefas em Andamento (2/2)',
-    tasks: tarefasPorStatus.emAndamento.slice(3),
-    speakerNotes: 'Também avançando em sandbox de e-mail e testes de restore.',
-  },
-  {
-    type: 'tasks',
-    title: 'Tarefas Pendentes / Próximos Passos',
-    tasks: tarefasPorStatus.pendentes,
-    speakerNotes: 'O próximo ciclo focará fortemente em conscientização e resposta a incidentes.',
+    speakerNotes: 'Entregas críticas já concluídas: SIEM (Wazuh), bloqueio de scripts, criptografia de disco, MFA, autenticação de e-mail, e configuração de credenciais.',
   },
 
-  // SLIDE 24: Divisor Pontos Atenção
+  // SLIDE 21: Tarefas em Andamento (Alta Prioridade)
+  {
+    type: 'improved-tasks',
+    title: 'Em Progresso - Alta Prioridade',
+    subtitle: 'Iniciativas em desenvolvimento ativo',
+    tasks: tarefasPorStatus.emAndamento.filter(t => t.priority === 'alto'),
+    speakerNotes: 'Foco atual: implementação de cofre de senhas (Passbolt), encaminhamento de logs ao SIEM, e controle de ativos não autorizados.',
+  },
+
+  // SLIDE 22: Tarefas em Andamento (Outras)
+  {
+    type: 'improved-tasks',
+    title: 'Em Progresso - Média Prioridade',
+    subtitle: 'Iniciativas complementares',
+    tasks: tarefasPorStatus.emAndamento.filter(t => t.priority !== 'alto'),
+    speakerNotes: 'Também avançando em integração e-mail/AD e outras melhorias técnicas.',
+  },
+
+  // SLIDE 23: Tarefas Pendentes (Alta Prioridade)
+  {
+    type: 'improved-tasks',
+    title: 'Próximos Passos - Alta Prioridade',
+    subtitle: 'Pendências críticas para o próximo ciclo',
+    tasks: tarefasPorStatus.pendentes.filter(t => t.priority === 'alto'),
+    speakerNotes: 'Próximo ciclo focará em aprovação de normas e políticas pela diretoria, além de fluxos formais de acesso.',
+  },
+
+  // SLIDE 24: Tarefas Pendentes (Outras)
+  {
+    type: 'improved-tasks',
+    title: 'Backlog de Melhorias',
+    subtitle: 'Roadmap de médio prazo',
+    tasks: tarefasPorStatus.pendentes.filter(t => t.priority !== 'alto'),
+    speakerNotes: 'Backlog inclui diretrizes de descarte, configurações de rede segura, e criação de casos de uso para alertas.',
+  },
+
+  // SLIDE 25: Divisor Pontos Atenção
   {
     type: 'divider',
     title: 'Pontos de Atenção',
-    subtitle: 'Riscos e Impedimentos',
+    subtitle: 'Riscos, Impedimentos e Dependências',
   },
 
-  // SLIDE 25: Lista Pontos Atenção
+  // SLIDE 26: Pontos Atenção Redesenhado
   {
-    type: 'content',
+    type: 'enhanced-content',
     title: 'Principais Pontos de Atenção',
-    items: pontosAtencao.map(p => `• ${p.titulo}: ${p.descricao}`),
-    speakerNotes: 'A formalização dos processos é o nosso maior gargalo para subir de nível de maturidade.',
+    subtitle: 'Questões que requerem priorização e apoio executivo',
+    icon: AlertTriangle,
+    items: [
+      { text: 'Formalização e Publicação de Processos: Processos desenvolvidos aguardam formalização para aumentar maturidade organizacional', icon: FileText, highlight: true },
+      { text: 'Comitê de Segurança: Necessário formalizar governança com comitê estruturado conforme recomendações já encaminhadas', icon: Users, highlight: true },
+      { text: 'Privacidade e Conscientização: Retomar programas de LGPD e awareness em segurança da informação', icon: Shield },
+      { text: 'Gestão de Incidentes: Iniciar implantação de processo estruturado de resposta a incidentes', icon: AlertTriangle, highlight: true },
+      { text: 'Book de Indicadores: Dar continuidade ao modelo de métricas já disponibilizado', icon: Activity },
+    ],
+    layout: 'grid',
+    speakerNotes: 'Principais gargalos: formalização de processos e governança. Estes são fundamentais para evoluir de "Repetitivo" para "Definido" em maturidade.',
   },
 
-  // SLIDE 26: Contato
+  // SLIDE 27: Contato
   {
     type: 'contact',
     name: 'Mônica Yoshida',
     title: 'ness.',
     email: 'myoshida@ness.com.br',
     phone: '+55 11 2504-7650',
-    speakerNotes: 'Obrigado. Dúvidas?',
+    speakerNotes: 'Obrigado pela atenção. Estamos à disposição para dúvidas e discussões.',
   },
 ]
 
@@ -265,17 +354,79 @@ function TitleSlide({ data }: any) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center h-screen gap-8 px-4 relative overflow-hidden"
+      className="flex flex-col items-center justify-center h-screen gap-8 px-8 relative overflow-hidden"
     >
+      {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-primary opacity-5" />
-      <div className="space-y-6 text-center max-w-4xl z-10">
-        <h1 className="text-6xl md:text-7xl font-light text-slate-100 leading-tight tracking-tight">
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+      </div>
+
+      {/* Content */}
+      <div className="space-y-8 text-center max-w-5xl z-10">
+        {/* Icon/Logo */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring" }}
+          className="flex justify-center"
+        >
+          <div className="p-6 bg-primary/10 rounded-2xl border border-primary/20">
+            <Shield className="w-16 h-16 text-primary" />
+          </div>
+        </motion.div>
+
+        {/* Title */}
+        <motion.h1
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-5xl md:text-7xl font-light text-slate-100 leading-tight tracking-tight"
+        >
           {data.title}
-        </h1>
-        <div className="h-1 w-32 bg-blue-500 mx-auto rounded-full" />
-        <p className="text-xl md:text-2xl text-slate-400 font-light">
+        </motion.h1>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ delay: 0.5 }}
+          className="h-1 w-32 bg-gradient-primary mx-auto rounded-full"
+        />
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-xl md:text-2xl text-slate-300 font-light"
+        >
           {data.subtitle}
-        </p>
+        </motion.p>
+
+        {/* Client & Date */}
+        {(data.client || data.date) && (
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="flex items-center justify-center gap-6 text-slate-400 text-lg"
+          >
+            {data.client && (
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full" />
+                <span>{data.client}</span>
+              </div>
+            )}
+            {data.date && (
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full" />
+                <span>{data.date}</span>
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
     </motion.div>
   )
@@ -376,8 +527,8 @@ function GridSlide({ data, type }: any) {
         </h2>
       </div>
       <div className="flex-1 overflow-y-auto pr-2">
-        {type === 'pentest' && <PentestGrid applications={data.data} />}
-        {type === 'tasks' && <TaskStatusGrid tasks={data.tasks} />}
+        {type === 'pentest' && <ImprovedPentestGrid applications={data.data} />}
+        {type === 'tasks' && <ImprovedTaskGrid tasks={data.tasks} />}
       </div>
     </motion.div>
   )
@@ -415,6 +566,120 @@ function SlideRenderer({ slide }: { slide: any }) {
   switch (slide.type) {
     case 'title':
       return <TitleSlide data={slide} />
+
+    // Executive Overview (NEW)
+    case 'executive-overview':
+      return (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col h-screen py-12"
+        >
+          <div className="px-8 mb-6">
+            <h2 className="text-4xl font-light text-slate-100 border-l-4 border-primary pl-6">
+              {slide.title}
+            </h2>
+          </div>
+          <ExecutiveOverview
+            data={{
+              adherenceIG2: implementationEvolution[implementationEvolution.length - 1].geral,
+              workedControls: workedControls.length,
+              totalControls: cisControls.length,
+              vulnerabilitiesResolved: 418,
+              totalVulnerabilities: 771,
+              maturityLevel: 'Repetitivo',
+              maturityProgress: maturityEvolution[maturityEvolution.length - 1].nivel
+            }}
+          />
+        </motion.div>
+      )
+
+    // Enhanced Content (NEW)
+    case 'enhanced-content':
+      return <EnhancedContentSlide {...slide} />
+
+    // Vulnerability Metrics (NEW)
+    case 'vuln-metrics':
+      return (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+        >
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+              {slide.title}
+            </h2>
+            {slide.subtitle && (
+              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
+            )}
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <VulnerabilityMetrics
+              data={{
+                total: 406,
+                criticas: 22,
+                altas: 86,
+                medias: 202,
+                baixas: 96,
+                tratadas: 418,
+                novas: 53,
+                escopo: vulnerabilityScanScope
+              }}
+            />
+          </div>
+        </motion.div>
+      )
+
+    // Improved Pentest Grid (NEW)
+    case 'improved-pentest':
+      return (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+        >
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+              {slide.title}
+            </h2>
+            {slide.subtitle && (
+              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
+            )}
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <ImprovedPentestGrid applications={slide.data} />
+          </div>
+        </motion.div>
+      )
+
+    // Improved Task Grid (NEW)
+    case 'improved-tasks':
+      return (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
+        >
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
+              {slide.title}
+            </h2>
+            {slide.subtitle && (
+              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
+            )}
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <ImprovedTaskGrid tasks={slide.tasks} />
+          </div>
+        </motion.div>
+      )
+
+    // Original types
     case 'content':
       return <ContentSlide data={slide} />
     case 'cis-table':
