@@ -18,7 +18,7 @@ interface Metric {
     direction: 'up' | 'down' | 'neutral'
     label?: string
   }
-  status?: 'success' | 'warning' | 'danger' | 'neutral'
+  status?: 'success' | 'warning' | 'danger' | 'info' | 'neutral'
   subtitle?: string
   badge?: ReactNode
 }
@@ -53,6 +53,13 @@ const statusStyles = {
     icon: 'text-red-400',
     value: 'text-red-400',
     glow: 'hover:shadow-[0_0_15px_rgba(239,68,68,0.1)]',
+  },
+  info: {
+    border: 'border-blue-500/20',
+    bg: 'bg-blue-500/5',
+    icon: 'text-blue-400',
+    value: 'text-blue-400',
+    glow: 'hover:shadow-[0_0_15px_rgba(59,130,246,0.1)]',
   },
   neutral: {
     border: 'border-primary-500/20',
