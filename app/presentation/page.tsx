@@ -25,7 +25,12 @@ import {
   Server,
   Globe,
   Award,
-  Activity
+  Activity,
+  Map,
+  Maximize,
+  Minimize,
+  HelpCircle,
+  Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BrandWordmark } from '@/components/ui/brand-dot'
@@ -45,6 +50,13 @@ import { ImprovedPentestGrid } from '@/components/presentation/improved-pentest-
 import { VulnerabilityMetrics } from '@/components/presentation/vulnerability-metrics'
 import { EnhancedContentSlide } from '@/components/presentation/enhanced-content-slide'
 
+// Advanced UX Components
+import { MinimapOverlay } from '@/components/presentation/slide-minimap'
+import { PresenterView } from '@/components/presentation/presenter-mode'
+import { ProgressIndicator, SectionProgress } from '@/components/presentation/progress-indicator'
+import { KeyboardShortcutsPanel, useKeyboardShortcuts } from '@/components/presentation/keyboard-shortcuts'
+import { PageTransition, Direction } from '@/components/presentation/slide-transition'
+
 // Data
 import {
   cisControls,
@@ -62,6 +74,16 @@ import {
   vulnerabilityScanScope,
   tarefas
 } from '@/lib/presentation-data'
+
+// Define sections for navigation
+const slideSections = [
+  { title: 'Introdução', startIndex: 0, endIndex: 4, icon: <BookOpen className="w-4 h-4" /> },
+  { title: 'Controles CIS', startIndex: 5, endIndex: 12, icon: <Shield className="w-4 h-4" /> },
+  { title: 'Vulnerabilidades', startIndex: 13, endIndex: 16, icon: <AlertTriangle className="w-4 h-4" /> },
+  { title: 'Pentests', startIndex: 17, endIndex: 18, icon: <FileSearch className="w-4 h-4" /> },
+  { title: 'Plano de Ação', startIndex: 19, endIndex: 24, icon: <CheckSquare className="w-4 h-4" /> },
+  { title: 'Conclusão', startIndex: 25, endIndex: 27, icon: <TrendingUp className="w-4 h-4" /> },
+]
 
 // Slides Configuration
 const slides = [
@@ -709,18 +731,50 @@ function SlideRenderer({ slide }: { slide: any }) {
 // Componente Principal da Página
 export default function Presentation() {
   const [current, setCurrent] = useState(0)
-  const [showNotes, setShowNotes] = useState(true)
+  const [direction, setDirection] = useState<Direction>('forward')
+  const [showNotes, setShowNotes] = useState(false)
+  const [showMinimap, setShowMinimap] = useState(false)
+  const [showPresenter, setShowPresenter] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [theme, setTheme] = useState<'dark' | 'high-contrast'>('dark')
   const router = useRouter()
 
   const nextSlide = () => {
     if (current < slides.length - 1) {
+      setDirection('forward')
       setCurrent(current + 1)
     }
   }
 
   const prevSlide = () => {
     if (current > 0) {
+      setDirection('backward')
       setCurrent(current - 1)
+    }
+  }
+
+  const goToSlide = (index: number) => {
+    if (index >= 0 && index < slides.length) {
+      setDirection(index > current ? 'forward' : 'backward')
+      setCurrent(index)
+    }
+  }
+
+  const goToSection = (sectionIndex: number) => {
+    if (sectionIndex >= 0 && sectionIndex < slideSections.length) {
+      const section = slideSections[sectionIndex]
+      goToSlide(section.startIndex)
+    }
+  }
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
     }
   }
 
@@ -734,106 +788,164 @@ export default function Presentation() {
     }
   }
 
+  // Advanced keyboard shortcuts
+  useKeyboardShortcuts({
+    onNext: nextSlide,
+    onPrevious: prevSlide,
+    onFirst: () => goToSlide(0),
+    onLast: () => goToSlide(slides.length - 1),
+    onToggleNotes: () => setShowNotes(prev => !prev),
+    onToggleFullscreen: toggleFullscreen,
+    onTogglePresenter: () => setShowPresenter(prev => !prev),
+    onToggleMinimap: () => setShowMinimap(prev => !prev),
+    onToggleHelp: () => setShowHelp(prev => !prev),
+    onToggleTheme: () => setTheme(prev => prev === 'dark' ? 'high-contrast' : 'dark'),
+    onGotoSection: goToSection,
+  })
+
+  // Handle fullscreen change
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') {
-        if (current < slides.length - 1) setCurrent(current + 1)
-      }
-      if (e.key === 'ArrowLeft') {
-        if (current > 0) setCurrent(current - 1)
-      }
-      if (e.key === 'n') {
-        setShowNotes((prev) => !prev)
-      }
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
     }
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [current])
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
 
   return (
-    <div className="bg-slate-950 min-h-screen flex flex-col font-inter text-slate-200">
+    <div className={`min-h-screen flex flex-col font-inter text-slate-200 ${theme === 'high-contrast' ? 'bg-black' : 'bg-slate-950'}`}>
       {/* Área do Slide */}
       <div className="flex-1 relative overflow-hidden">
-        <AnimatePresence mode="wait">
-          <SlideRenderer key={current} slide={slides[current]} />
+        <AnimatePresence mode="wait" custom={direction}>
+          <PageTransition key={current} direction={direction}>
+            <SlideRenderer slide={slides[current]} />
+          </PageTransition>
         </AnimatePresence>
       </div>
 
-      {/* Barra de Controle */}
-      <div className="bg-slate-900 border-t border-slate-800 px-6 py-4 flex items-center justify-between gap-4 z-50">
-        <div className="flex items-center gap-4">
-          <span className="text-slate-500 text-sm font-medium font-mono">
-            {String(current + 1).padStart(2, '0')} / {slides.length}
-          </span>
-          <div className="h-1 w-24 bg-slate-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-500 transition-all duration-300"
-              style={{ width: `${((current + 1) / slides.length) * 100}%` }}
+      {/* Barra de Controle Avançada */}
+      <div className="bg-slate-900/95 backdrop-blur-sm border-t border-slate-800 px-6 py-3 z-50">
+        {/* Section Progress */}
+        <div className="mb-3">
+          <SectionProgress
+            sections={slideSections}
+            currentSlide={current}
+            onNavigate={goToSlide}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          {/* Left: Progress Info */}
+          <div className="flex-1 max-w-sm">
+            <ProgressIndicator
+              current={current}
+              total={slides.length}
+              sections={slideSections}
             />
           </div>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={prevSlide}
-            disabled={current === 0}
-            variant="ghost"
-            size="sm"
-            className="text-slate-400 hover:text-white hover:bg-slate-800"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
-          <Button
-            onClick={nextSlide}
-            disabled={current === slides.length - 1}
-            variant="ghost"
-            size="sm"
-            className="text-slate-400 hover:text-white hover:bg-slate-800"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
-        </div>
+          {/* Center: Navigation */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={prevSlide}
+              disabled={current === 0}
+              variant="ghost"
+              size="sm"
+              className="text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30"
+              title="Anterior (←)"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            <Button
+              onClick={nextSlide}
+              disabled={current === slides.length - 1}
+              variant="ghost"
+              size="sm"
+              className="text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30"
+              title="Próximo (→ ou Space)"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => setShowNotes(!showNotes)}
-            variant="ghost"
-            size="sm"
-            className={`transition-colors ${showNotes ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
-            title="Notas do apresentador (n)"
-          >
-            {showNotes ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-          </Button>
-          <Button
-            onClick={handleLogout}
-            variant="ghost"
-            size="sm"
-            className="text-slate-500 hover:text-red-400 hover:bg-red-500/10"
-            title="Sair"
-          >
-            <LogOut className="w-4 h-4" />
-          </Button>
+          {/* Right: Tools */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => setShowMinimap(true)}
+              variant="ghost"
+              size="sm"
+              className="text-slate-500 hover:text-slate-300"
+              title="Minimap (m)"
+            >
+              <Map className="w-4 h-4" />
+            </Button>
+
+            <PresenterView
+              isOpen={showPresenter}
+              onToggle={() => setShowPresenter(prev => !prev)}
+              currentSlide={slides[current]}
+              nextSlide={current < slides.length - 1 ? slides[current + 1] : null}
+              currentIndex={current}
+              totalSlides={slides.length}
+            />
+
+            <Button
+              onClick={toggleFullscreen}
+              variant="ghost"
+              size="sm"
+              className="text-slate-500 hover:text-slate-300"
+              title="Tela Cheia (f)"
+            >
+              {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+            </Button>
+
+            <Button
+              onClick={() => setTheme(prev => prev === 'dark' ? 'high-contrast' : 'dark')}
+              variant="ghost"
+              size="sm"
+              className="text-slate-500 hover:text-slate-300"
+              title="Alternar Tema (t)"
+            >
+              <Palette className="w-4 h-4" />
+            </Button>
+
+            <Button
+              onClick={() => setShowHelp(true)}
+              variant="ghost"
+              size="sm"
+              className="text-slate-500 hover:text-slate-300"
+              title="Atalhos (?)"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
+
+            <Button
+              onClick={handleLogout}
+              variant="ghost"
+              size="sm"
+              className="text-slate-500 hover:text-red-400 hover:bg-red-500/10"
+              title="Sair"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Speaker Notes */}
-      <AnimatePresence>
-        {showNotes && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="bg-slate-900 border-t border-slate-800 overflow-hidden"
-          >
-            <div className="px-6 py-4 max-w-5xl mx-auto">
-              <p className="text-slate-400 text-sm leading-relaxed font-mono">
-                <span className="text-blue-500 font-bold mr-2">SPEAKER:</span>
-                {slides[current].speakerNotes}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Advanced Overlays */}
+      <MinimapOverlay
+        isOpen={showMinimap}
+        onClose={() => setShowMinimap(false)}
+        slides={slides}
+        currentSlide={current}
+        onNavigate={goToSlide}
+        sections={slideSections}
+      />
+
+      <KeyboardShortcutsPanel
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
+      />
     </div>
   )
 }
