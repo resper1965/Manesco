@@ -34,7 +34,8 @@ import {
   Server,
   Laptop,
   AlertCircle,
-  X
+  X,
+  Calendar
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -194,9 +195,9 @@ function Slide03_ContextualizacaoCIS() {
       icon={Award}
       variant="default"
     >
-      <ContentContainer variant="stack" gap={8}>
+      <ContentContainer variant="stack" gap={6}>
         <InfoPanel variant="glassmorphic" status="info">
-          <p className="text-xl leading-relaxed">
+          <p className="text-lg leading-relaxed">
             O <strong className="text-primary-400">CIS Controls</strong> é um conjunto de práticas recomendadas
             para defesa cibernética, desenvolvido por especialistas globais em segurança da informação.
             É o padrão de referência para organizações que buscam proteção efetiva contra ameaças modernas.
@@ -394,6 +395,10 @@ function Slide06_ManescoVsMercado() {
 
 // ========== SLIDE 7: EVOLUÇÃO TEMPORAL ==========
 function Slide07_EvolucaoTemporal() {
+  const latest = implementationEvolution[implementationEvolution.length - 1]
+  const first = implementationEvolution[0]
+  const crescimento = ((latest.geral - first.geral) / first.geral * 100).toFixed(0)
+  
   return (
     <SlideLayout
       title="Evolução da Implementação"
@@ -401,27 +406,62 @@ function Slide07_EvolucaoTemporal() {
       icon={TrendingUp}
       variant="default"
     >
-      <ChartCard
-        title="Progresso Geral"
-        subtitle="Crescimento consistente ao longo de 23 meses"
-        icon={TrendingUp}
-        chart={
-          <EvolutionTimeline
-            data={implementationEvolution}
-            lines={[{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }]}
+      <ContentContainer variant="stack" gap={4}>
+        {/* Métricas */}
+        <div className="grid grid-cols-4 gap-4">
+          <DataCard
+            title="Início (Dez/23)"
+            value={`${first.geral}%`}
+            icon={Clock}
+            status="neutral"
+            subtitle="Baseline inicial"
           />
-        }
-        insight={{
-          value: "45%",
-          label: "aderência atual",
-          trend: {
-            value: 200,
-            direction: 'up'
+          <DataCard
+            title="Atual (Nov/25)"
+            value={`${latest.geral}%`}
+            icon={TrendingUp}
+            status="success"
+            subtitle="Aderência atual"
+          />
+          <DataCard
+            title="Crescimento"
+            value={`${crescimento}%`}
+            icon={Activity}
+            status="success"
+            subtitle="Em 23 meses"
+          />
+          <DataCard
+            title="Período"
+            value="23 meses"
+            icon={Calendar}
+            status="neutral"
+            subtitle="Dez/23 a Nov/25"
+          />
+        </div>
+
+        {/* Gráfico */}
+        <ChartCard
+          title="Progresso Geral"
+          subtitle="Crescimento consistente ao longo de 23 meses"
+          icon={TrendingUp}
+          chart={
+            <EvolutionTimeline
+              data={implementationEvolution}
+              lines={[{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }]}
+            />
           }
-        }}
-        status="success"
-        height="lg"
-      />
+          insight={{
+            value: `${latest.geral}%`,
+            label: "aderência atual",
+            trend: {
+              value: 200,
+              direction: 'up'
+            }
+          }}
+          status="success"
+          height="md"
+        />
+      </ContentContainer>
     </SlideLayout>
   )
 }
@@ -480,7 +520,7 @@ function Slide08_ControlesTrabalhados() {
             label: "aderência nos prioritários"
           }}
           status="success"
-          height="md"
+          height="sm"
         />
       </ContentContainer>
     </SlideLayout>
@@ -534,11 +574,11 @@ function Slide10_EvolucaoMaturidade() {
           label: "maturidade atual"
         }}
         status="warning"
-        height="lg"
+        height="md"
       />
 
-      <InfoPanel variant="bordered" status="info" className="mt-6">
-        <p className="text-base">
+      <InfoPanel variant="bordered" status="info" className="mt-4">
+        <p className="text-sm">
           <strong>Insight:</strong> A maturidade evolui mais lentamente que a implementação técnica,
           pois depende de formalização de processos, treinamento de pessoas e governança estabelecida.
         </p>
@@ -609,7 +649,7 @@ function Slide12_EvolucaoVulnerabilidades() {
       icon={Shield}
       variant="default"
     >
-      <ContentContainer variant="stack" gap={6}>
+      <ContentContainer variant="stack" gap={4}>
         <MetricGrid
           metrics={metrics}
           columns={4}
@@ -627,11 +667,11 @@ function Slide12_EvolucaoVulnerabilidades() {
             label: "tratadas em Out/25"
           }}
           status="success"
-          height="md"
+          height="sm"
         />
 
         <InfoPanel variant="highlight" status="success">
-          <p className="text-lg">
+          <p className="text-base">
             <strong>Progresso significativo:</strong> Redução de 47% no total (771 → 406) e 94% nas
             críticas (345 → 22), demonstrando efetividade do programa de gestão de vulnerabilidades.
           </p>
@@ -920,14 +960,14 @@ function Slide17_PontosAtencao() {
       icon={AlertTriangle}
       variant="default"
     >
-      <ContentContainer variant="stack" gap={6}>
+      <ContentContainer variant="stack" gap={4}>
         <InfoPanel variant="highlight" status="warning">
-          <p className="text-base">
+          <p className="text-sm">
             Fundamentais para evoluir de <strong>"Repetitivo"</strong> para <strong>"Definido"</strong> em maturidade.
           </p>
         </InfoPanel>
 
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {pontosAtencao.map((ponto, i) => (
             <StatusIndicator
               key={i}
@@ -935,14 +975,14 @@ function Slide17_PontosAtencao() {
               label={ponto.titulo}
               description={ponto.descricao}
               icon={ponto.impacto === 'alto' ? AlertTriangle : AlertCircle}
-              size="md"
+              size="sm"
               showIcon={true}
             />
           ))}
         </div>
 
         <InfoPanel variant="bordered" status="info">
-          <div className="space-y-2 text-sm">
+          <div className="space-y-1.5 text-xs">
             <p className="font-semibold text-primary-400">Recomendações:</p>
             <div className="grid grid-cols-2 gap-2 text-neutral-300">
               <div className="flex items-start gap-2">
