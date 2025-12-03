@@ -1,3 +1,8 @@
+/**
+ * APRESENTAÇÃO PROFISSIONAL - MANESCO ADVOGADOS
+ * Governança de Segurança da Informação - CIS Controls v8.1 IG2
+ * Marca: Ness (#00ade8)
+ */
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -6,51 +11,50 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   ChevronLeft,
   ChevronRight,
-  Volume2,
-  VolumeX,
   LogOut,
   Shield,
   Target,
   TrendingUp,
-  BookOpen,
   AlertTriangle,
-  FileText,
-  CheckSquare,
-  Users,
-  Settings,
-  Lock,
-  Mail,
   FileSearch,
-  Laptop,
-  Server,
-  Globe,
+  CheckSquare,
   Award,
+  BarChart3,
   Activity,
   Map,
   Maximize,
   Minimize,
   HelpCircle,
-  Palette
+  Palette,
+  Lock,
+  FileText,
+  Users,
+  CheckCircle2,
+  Clock,
+  Server,
+  Laptop,
+  AlertCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { BrandWordmark } from '@/components/ui/brand-dot'
 
-// Original Components
+// Professional Components
+import { SlideLayout, ContentContainer } from '@/components/slides/SlideLayout'
+import { DataCard, MiniDataCard } from '@/components/slides/DataCard'
+import { ChartCard } from '@/components/slides/ChartCard'
+import { MetricGrid } from '@/components/slides/MetricGrid'
+import { StatusIndicator, StatusBadge, ProgressStatus } from '@/components/slides/StatusIndicator'
+import { SectionHeader } from '@/components/slides/SectionHeader'
+import { InfoPanel, FeatureList } from '@/components/slides/InfoPanel'
+
+// Chart Components
 import { CISControlsTable } from '@/components/presentation/cis-controls-table'
 import { MaturityRadar } from '@/components/presentation/maturity-radar'
 import { EvolutionTimeline } from '@/components/presentation/evolution-timeline'
 import { VulnerabilityEvolutionChart } from '@/components/presentation/vulnerability-chart'
-import { SectionDivider } from '@/components/presentation/section-divider'
 import { CisStatusChart } from '@/components/presentation/cis-status-chart'
+import { SectionDivider } from '@/components/presentation/section-divider'
 
-// New Enhanced Components
-import { ExecutiveOverview } from '@/components/presentation/executive-overview'
-import { ImprovedTaskGrid } from '@/components/presentation/improved-task-grid'
-import { ImprovedPentestGrid } from '@/components/presentation/improved-pentest-grid'
-import { VulnerabilityMetrics } from '@/components/presentation/vulnerability-metrics'
-import { EnhancedContentSlide } from '@/components/presentation/enhanced-content-slide'
-
-// Advanced UX Components
+// UX Components
 import { MinimapOverlay } from '@/components/presentation/slide-minimap'
 import { PresenterView } from '@/components/presentation/presenter-mode'
 import { ProgressIndicator, SectionProgress } from '@/components/presentation/progress-indicator'
@@ -66,679 +70,730 @@ import {
   totalVulnerabilitiesTrend,
   pentestApplications,
   pontosAtencao,
-  tarefasPorStatus,
+  tarefas,
   implementationEvolution,
   maturityEvolution,
   statusVsReference,
   workedEvolution,
   vulnerabilityScanScope,
-  tarefas
+  pentestSummary,
+  cisStatusData
 } from '@/lib/presentation-data'
 
-// Define sections for navigation
+// Sections
 const slideSections = [
-  { title: 'Introdução', startIndex: 0, endIndex: 4, icon: <BookOpen className="w-4 h-4" /> },
-  { title: 'Controles CIS', startIndex: 5, endIndex: 12, icon: <Shield className="w-4 h-4" /> },
-  { title: 'Vulnerabilidades', startIndex: 13, endIndex: 16, icon: <AlertTriangle className="w-4 h-4" /> },
-  { title: 'Pentests', startIndex: 17, endIndex: 18, icon: <FileSearch className="w-4 h-4" /> },
-  { title: 'Plano de Ação', startIndex: 19, endIndex: 24, icon: <CheckSquare className="w-4 h-4" /> },
-  { title: 'Conclusão', startIndex: 25, endIndex: 27, icon: <TrendingUp className="w-4 h-4" /> },
+  { title: 'Introdução', startIndex: 0, endIndex: 3, icon: <Shield className="w-4 h-4" /> },
+  { title: 'Controles CIS', startIndex: 4, endIndex: 9, icon: <Target className="w-4 h-4" /> },
+  { title: 'Vulnerabilidades', startIndex: 10, endIndex: 11, icon: <AlertTriangle className="w-4 h-4" /> },
+  { title: 'Pentests', startIndex: 12, endIndex: 12, icon: <FileSearch className="w-4 h-4" /> },
+  { title: 'Tarefas', startIndex: 13, endIndex: 15, icon: <CheckSquare className="w-4 h-4" /> },
+  { title: 'Pontos de Atenção', startIndex: 16, endIndex: 16, icon: <AlertCircle className="w-4 h-4" /> },
 ]
 
-// Slides Configuration
-const slides = [
-  // SLIDE 1: Capa Redesenhada
-  {
-    type: 'title',
-    title: 'Governança de Segurança da Informação',
-    subtitle: 'Status de Implementação CIS Controls IG2',
-    client: 'Manesco',
-    date: 'Novembro 2025',
-    speakerNotes: 'Bem-vindos. Apresentação executiva do status atual da governança de segurança, seguindo o framework CIS Controls IG2.',
-  },
-
-  // SLIDE 2: Overview Executivo (NOVO)
-  {
-    type: 'executive-overview',
-    title: 'Visão Executiva',
-    speakerNotes: 'Visão geral dos principais KPIs: 45% de aderência ao IG2, 8 controles ativos, e progresso significativo na gestão de vulnerabilidades.',
-  },
-
-  // SLIDE 3: Agenda Redesenhada
-  {
-    type: 'enhanced-content',
-    title: 'Agenda',
-    icon: BookOpen,
-    items: [
-      { text: 'Framework CIS Controls e Grupos de Implementação', icon: Shield },
-      { text: 'Status da Aderência ao IG2', icon: Target },
-      { text: 'Gestão de Vulnerabilidades e Pentests', icon: AlertTriangle },
-      { text: 'Status das Tarefas Prioritárias', icon: CheckSquare },
-      { text: 'Pontos de Atenção e Próximos Passos', icon: TrendingUp }
-    ],
-    layout: 'list',
-    speakerNotes: 'Nossa agenda cobre desde a metodologia até os resultados práticos e próximos passos.',
-  },
-
-  // SLIDE 4: Conceito CIS Redesenhado
-  {
-    type: 'enhanced-content',
-    title: 'Framework CIS Controls',
-    subtitle: 'Padrão global de defesa cibernética',
-    icon: Award,
-    items: [
-      { text: 'O CIS Controls é um conjunto de práticas recomendadas para defesa cibernética, desenvolvido por especialistas globais.', highlight: true },
-      '',
-      { text: 'IG1: Higiene básica cibernética', icon: Server },
-      { text: 'IG2: Dados sensíveis e infraestrutura complexa', icon: Shield, highlight: true },
-      { text: 'IG3: Alta criticidade e alvos sofisticados', icon: Lock },
-    ],
-    layout: 'list',
-    speakerNotes: 'O CIS é o padrão ouro. O IG2 é o nível adequado para a complexidade e responsabilidade da Manesco.',
-  },
-
-  // SLIDE 5: Contexto Manesco Redesenhado
-  {
-    type: 'enhanced-content',
-    title: 'Por que IG2 para Manesco?',
-    subtitle: 'Adequação ao perfil e necessidades',
-    icon: Target,
-    items: [
-      { text: 'Infraestrutura de TI desenvolvida e diversificada', icon: Laptop },
-      { text: 'Proteção de dados sensíveis e confidenciais', icon: Lock },
-      { text: 'Monitoramento contínuo e resposta a ameaças', icon: Activity },
-      { text: 'Controle de acessos avançado e gestão de identidades', icon: Users },
-      '',
-      { text: 'O IG2 estabelece uma base sólida de segurança e governança adequada ao porte e responsabilidade da organização.', highlight: true }
-    ],
-    layout: 'grid',
-    speakerNotes: 'Escolhemos o IG2 pois ele equilibra proteção robusta com viabilidade operacional para o perfil da Manesco.',
-  },
-
-  // SLIDE 5: Tabela Controles
-  {
-    type: 'cis-table',
-    title: 'Escopo CIS v8 - IG2',
-    subtitle: '18 Controles de Segurança',
-    data: cisControls,
-    speakerNotes: 'Estes são os 18 controles que compõem o framework. Estamos trabalhando ativamente em 8 deles.',
-  },
-
-  // SLIDE 6: Divisor
-  {
-    type: 'divider',
-    title: 'Evolução dos Controles',
-    subtitle: 'Status Atual e Comparativos',
-  },
-
-  // SLIDE 7: Status vs Referência
-  {
-    type: 'chart-bar',
-    title: 'Status Atual vs Referência',
-    data: statusVsReference,
-    speakerNotes: 'Ainda temos um gap em relação à referência ideal do IG2, mas o progresso é consistente.',
-  },
-
-  // SLIDE 8: Evolução Temporal
-  {
-    type: 'chart-line',
-    title: 'Evolução da Implantação',
-    subtitle: 'Aderência Geral ao IG2 (Dez/23 - Nov/25)',
-    data: implementationEvolution,
-    lines: [{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }],
-    speakerNotes: 'Crescemos de 15% para 45% de aderência geral em 6 meses.',
-  },
-
-  // SLIDE 9: Controles Trabalhados
-  {
-    type: 'cis-table',
-    title: 'Controles Trabalhados',
-    subtitle: 'Foco atual da equipe de segurança',
-    data: workedControls,
-    speakerNotes: 'Estamos priorizando estes 8 controles que trazem maior redução de risco imediato.',
-  },
-
-  // SLIDE 10: Evolução Trabalhados
-  {
-    type: 'chart-line',
-    title: 'Evolução - Controles Trabalhados',
-    subtitle: 'Progresso específico nos controles prioritários',
-    data: workedEvolution,
-    lines: [{ dataKey: 'trabalhados', name: 'Controles Trabalhados (%)', color: '#22c55e' }],
-    speakerNotes: 'Nos controles prioritários, nossa evolução é ainda mais expressiva, chegando a 82%.',
-  },
-
-  // SLIDE 11: Radar Maturidade
-  {
-    type: 'radar',
-    title: 'Maturidade Atual por Controle',
-    data: currentMaturity,
-    speakerNotes: 'A maioria dos controles está no nível "Repetitivo". O objetivo é chegar em "Definido" com a formalização.',
-  },
-
-  // SLIDE 12: Evolução Maturidade
-  {
-    type: 'chart-line',
-    title: 'Evolução da Maturidade',
-    subtitle: 'Nível médio (1=Inicial, 2=Repetitivo, 3=Definido)',
-    data: maturityEvolution,
-    lines: [{ dataKey: 'nivel', name: 'Nível Médio (%)', color: '#f59e0b' }],
-    yAxisLabel: 'Nível de Maturidade (%)',
-    speakerNotes: 'A maturidade evolui mais lentamente que a implantação técnica, pois depende de processos e pessoas.',
-  },
-
-  // SLIDE 13: Divisor Vulnerabilidades
-  {
-    type: 'divider',
-    title: 'Gestão de Vulnerabilidades',
-    subtitle: 'Scans, Análises e Correções Contínuas',
-  },
-
-  // SLIDE 14: Vulnerability Metrics Dashboard (NOVO)
-  {
-    type: 'vuln-metrics',
-    title: 'Panorama de Vulnerabilidades',
-    subtitle: 'Métricas e indicadores atuais',
-    speakerNotes: 'Dashboard completo mostrando 406 vulnerabilidades ativas, com 47% já tratadas. Foco na redução das 22 críticas e 86 altas.',
-  },
-
-  // SLIDE 15: Vuln Evolução
-  {
-    type: 'vuln-chart',
-    title: 'Evolução: Novas vs Tratadas',
-    subtitle: 'Tendência mensal de tratamento (Set/25 - Out/25)',
-    data: vulnerabilityEvolution,
-    speakerNotes: 'Tivemos baseline de 771 em Setembro. Em Outubro, tratamos 418 vulnerabilidades, reduzindo o total para 406. Capacidade de tratamento está efetiva.',
-  },
-
-  // SLIDE 16: Vuln Trend
-  {
-    type: 'vuln-chart',
-    title: 'Redução de Vulnerabilidades Críticas',
-    subtitle: 'De 345 para 22 críticas em 30 dias',
-    data: totalVulnerabilitiesTrend.map(t => ({
-      mes: t.periodo,
-      total: t.total,
-      novas: t.criticas + t.altas,
-      tratadas: 0
-    })),
-    speakerNotes: 'Progresso significativo: redução de 94% nas vulnerabilidades críticas (de 345 para 22), demonstrando efetividade do programa.',
-  },
-
-  // SLIDE 17: Divisor Pentests
-  {
-    type: 'divider',
-    title: 'Testes de Penetração',
-    subtitle: 'Avaliação de Segurança Aplicacional',
-  },
-
-  // SLIDE 18: Pentest Grid Melhorado
-  {
-    type: 'improved-pentest',
-    title: 'Resultados de Pentests',
-    subtitle: '8 aplicações corporativas avaliadas | Referência: Outubro 2025',
-    data: pentestApplications,
-    speakerNotes: 'Pentest consolidado em 8 aplicações críticas resultou em 75 vulnerabilidades: 5 altas, 21 médias, 49 baixas. Nenhuma crítica, indicando boa postura de segurança aplicacional.',
-  },
-
-  // SLIDE 19: Divisor Tarefas
-  {
-    type: 'divider',
-    title: 'Plano de Ação',
-    subtitle: 'Roadmap de Implementação e Progresso',
-  },
-
-  // SLIDE 20: Tarefas Concluídas
-  {
-    type: 'improved-tasks',
-    title: 'Entregas Concluídas',
-    subtitle: 'Marcos importantes já alcançados',
-    tasks: tarefasPorStatus.concluidas,
-    speakerNotes: 'Entregas críticas já concluídas: SIEM (Wazuh), bloqueio de scripts, criptografia de disco, MFA, autenticação de e-mail, e configuração de credenciais.',
-  },
-
-  // SLIDE 21: Tarefas em Andamento (Alta Prioridade)
-  {
-    type: 'improved-tasks',
-    title: 'Em Progresso - Alta Prioridade',
-    subtitle: 'Iniciativas em desenvolvimento ativo',
-    tasks: tarefasPorStatus.emAndamento.filter(t => t.priority === 'alto'),
-    speakerNotes: 'Foco atual: implementação de cofre de senhas (Passbolt), encaminhamento de logs ao SIEM, e controle de ativos não autorizados.',
-  },
-
-  // SLIDE 22: Tarefas em Andamento (Outras)
-  {
-    type: 'improved-tasks',
-    title: 'Em Progresso - Média Prioridade',
-    subtitle: 'Iniciativas complementares',
-    tasks: tarefasPorStatus.emAndamento.filter(t => t.priority !== 'alto'),
-    speakerNotes: 'Também avançando em integração e-mail/AD e outras melhorias técnicas.',
-  },
-
-  // SLIDE 23: Tarefas Pendentes (Alta Prioridade)
-  {
-    type: 'improved-tasks',
-    title: 'Próximos Passos - Alta Prioridade',
-    subtitle: 'Pendências críticas para o próximo ciclo',
-    tasks: tarefasPorStatus.pendentes.filter(t => t.priority === 'alto'),
-    speakerNotes: 'Próximo ciclo focará em aprovação de normas e políticas pela diretoria, além de fluxos formais de acesso.',
-  },
-
-  // SLIDE 24: Tarefas Pendentes (Outras)
-  {
-    type: 'improved-tasks',
-    title: 'Backlog de Melhorias',
-    subtitle: 'Roadmap de médio prazo',
-    tasks: tarefasPorStatus.pendentes.filter(t => t.priority !== 'alto'),
-    speakerNotes: 'Backlog inclui diretrizes de descarte, configurações de rede segura, e criação de casos de uso para alertas.',
-  },
-
-  // SLIDE 25: Divisor Pontos Atenção
-  {
-    type: 'divider',
-    title: 'Pontos de Atenção',
-    subtitle: 'Riscos, Impedimentos e Dependências',
-  },
-
-  // SLIDE 26: Pontos Atenção Redesenhado
-  {
-    type: 'enhanced-content',
-    title: 'Principais Pontos de Atenção',
-    subtitle: 'Questões que requerem priorização e apoio executivo',
-    icon: AlertTriangle,
-    items: [
-      { text: 'Formalização e Publicação de Processos: Processos desenvolvidos aguardam formalização para aumentar maturidade organizacional', icon: FileText, highlight: true },
-      { text: 'Comitê de Segurança: Necessário formalizar governança com comitê estruturado conforme recomendações já encaminhadas', icon: Users, highlight: true },
-      { text: 'Privacidade e Conscientização: Retomar programas de LGPD e awareness em segurança da informação', icon: Shield },
-      { text: 'Gestão de Incidentes: Iniciar implantação de processo estruturado de resposta a incidentes', icon: AlertTriangle, highlight: true },
-      { text: 'Book de Indicadores: Dar continuidade ao modelo de métricas já disponibilizado', icon: Activity },
-    ],
-    layout: 'grid',
-    speakerNotes: 'Principais gargalos: formalização de processos e governança. Estes são fundamentais para evoluir de "Repetitivo" para "Definido" em maturidade.',
-  },
-
-  // SLIDE 27: Contato
-  {
-    type: 'contact',
-    name: 'Mônica Yoshida',
-    title: 'ness.',
-    email: 'myoshida@ness.com.br',
-    phone: '+55 11 2504-7650',
-    speakerNotes: 'Obrigado pela atenção. Estamos à disposição para dúvidas e discussões.',
-  },
-]
-
-// --- Componentes de Slide ---
-
-function TitleSlide({ data }: any) {
+// ========== SLIDE 1: LOGO TRUSTNESS ==========
+function Slide01_LogoTrustness() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center h-screen gap-8 px-8 relative overflow-hidden"
-    >
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-primary opacity-5" />
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+      <motion.div
+        initial={{ scale: 0, opacity: 0, rotate: -180 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 1, type: "spring", bounce: 0.3 }}
+        className="relative"
+      >
+        {/* Glow effect */}
+        <div className="absolute inset-0 bg-primary-500/20 blur-3xl scale-150 animate-pulse" />
+
+        {/* Logo */}
+        <div className="relative p-16 rounded-3xl bg-gradient-to-br from-primary-500/10 to-primary-600/5 border-2 border-primary-500/30">
+          <div className="text-center space-y-6">
+            <Shield className="w-32 h-32 text-primary-400 mx-auto" strokeWidth={1.5} />
+            <div className="space-y-2">
+              <h1 className="text-6xl font-bold text-neutral-50 tracking-tight">
+                trust<span className="text-primary-400">ness</span>
+              </h1>
+              <p className="text-xl text-neutral-400">Security by Design</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+// ========== SLIDE 2: CAPA ==========
+function Slide02_Capa() {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen gap-12 px-8 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       {/* Content */}
-      <div className="space-y-8 text-center max-w-5xl z-10">
-        {/* Icon/Logo */}
+      <div className="z-10 space-y-12 text-center max-w-5xl">
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring" }}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
           className="flex justify-center"
         >
-          <div className="p-6 bg-primary/10 rounded-2xl border border-primary/20">
-            <Shield className="w-16 h-16 text-primary" />
+          <div className="p-8 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-3xl border-2 border-primary-500/30 shadow-[0_0_50px_rgba(0,173,232,0.3)]">
+            <Shield className="w-24 h-24 text-primary-400" strokeWidth={1.5} />
           </div>
         </motion.div>
 
-        {/* Title */}
-        <motion.h1
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="space-y-8"
+        >
+          <h1 className="text-6xl md:text-7xl font-bold text-neutral-50 leading-tight">
+            Governança de<br />Segurança da Informação
+          </h1>
+
+          <div className="h-1 w-48 bg-gradient-to-r from-transparent via-primary-500 to-transparent mx-auto rounded-full" />
+
+          <h2 className="text-3xl md:text-4xl text-primary-400 font-semibold">
+            Manesco Advogados
+          </h2>
+        </motion.div>
+
+        <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-5xl md:text-7xl font-light text-slate-100 leading-tight tracking-tight"
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="flex items-center justify-center gap-8 text-neutral-400 text-xl"
         >
-          {data.title}
-        </motion.h1>
+          <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-neutral-800/50 border border-neutral-700/50">
+            <Clock className="w-5 h-5 text-primary-400" />
+            <span>Novembro 2025</span>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
 
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 0.5 }}
-          className="h-1 w-32 bg-gradient-primary mx-auto rounded-full"
+// ========== SLIDE 3: CONTEXTUALIZAÇÃO CIS ==========
+function Slide03_ContextualizacaoCIS() {
+  return (
+    <SlideLayout
+      title="CIS Controls v8.1 IG2"
+      subtitle="Padrão Global de Defesa Cibernética"
+      icon={Award}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={8}>
+        <InfoPanel variant="glassmorphic" status="info">
+          <p className="text-xl leading-relaxed">
+            O <strong className="text-primary-400">CIS Controls</strong> é um conjunto de práticas recomendadas
+            para defesa cibernética, desenvolvido por especialistas globais em segurança da informação.
+            É o padrão de referência para organizações que buscam proteção efetiva contra ameaças modernas.
+          </p>
+        </InfoPanel>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <DataCard
+            title="IG1"
+            value="Básico"
+            subtitle="Higiene cibernética essencial"
+            icon={Server}
+            status="neutral"
+          >
+            <p className="text-sm text-neutral-400 mt-3">
+              Para organizações com recursos limitados e infraestrutura simples
+            </p>
+          </DataCard>
+
+          <DataCard
+            title="IG2"
+            value="Avançado"
+            subtitle="Infraestrutura complexa"
+            icon={Shield}
+            status="success"
+          >
+            <p className="text-sm text-neutral-200 mt-3 font-semibold">
+              ✓ Adequado para Manesco Advogados
+            </p>
+            <p className="text-sm text-neutral-400 mt-1">
+              Proteção de dados sensíveis e infraestrutura desenvolvida
+            </p>
+          </DataCard>
+
+          <DataCard
+            title="IG3"
+            value="Máximo"
+            subtitle="Alta criticidade"
+            icon={Lock}
+            status="neutral"
+          >
+            <p className="text-sm text-neutral-400 mt-3">
+              Para infraestrutura crítica ou alvos de ameaças avançadas
+            </p>
+          </DataCard>
+        </div>
+
+        <InfoPanel variant="highlight" status="success">
+          <p className="text-lg">
+            <strong>Por que IG2?</strong> O Manesco Advogados possui infraestrutura de TI desenvolvida,
+            dados sensíveis e necessidade de monitoramento contínuo. O IG2 equilibra proteção robusta
+            com viabilidade operacional.
+          </p>
+        </InfoPanel>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 4: LISTA 18 CONTROLES ==========
+function Slide04_Lista18Controles() {
+  return (
+    <SlideLayout
+      title="Escopo CIS v8.1 - IG2"
+      subtitle="18 Controles de Segurança"
+      icon={Target}
+      variant="default"
+    >
+      <div className="h-full overflow-hidden bg-neutral-900/50 rounded-2xl border border-neutral-800 p-4">
+        <CISControlsTable controls={cisControls} />
+      </div>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 5: DIVISOR EVOLUÇÃO ==========
+function Slide05_DivisorEvolucao() {
+  return <SectionDivider title="Evolução dos Controles" subtitle="Status Atual e Análise Comparativa" />
+}
+
+// ========== SLIDE 6: GRÁFICO MANESCO VS MERCADO ==========
+function Slide06_ManescoVsMercado() {
+  return (
+    <SlideLayout
+      title="Manesco vs Referência de Mercado"
+      subtitle="Comparativo com escritórios de advocacia"
+      icon={BarChart3}
+      variant="default"
+    >
+      <ChartCard
+        title="Aderência aos Controles CIS"
+        subtitle="Comparação percentual por controle"
+        icon={BarChart3}
+        chart={<CisStatusChart data={statusVsReference} />}
+        insight={{
+          value: "11/18",
+          label: "controles acima da média",
+          trend: {
+            value: 61,
+            direction: 'up'
+          }
+        }}
+        status="success"
+        height="lg"
+      />
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 7: EVOLUÇÃO TEMPORAL ==========
+function Slide07_EvolucaoTemporal() {
+  return (
+    <SlideLayout
+      title="Evolução da Implementação"
+      subtitle="Aderência Geral ao IG2 (Dez/23 - Nov/25)"
+      icon={TrendingUp}
+      variant="default"
+    >
+      <ChartCard
+        title="Progresso Geral"
+        subtitle="Crescimento consistente ao longo de 23 meses"
+        icon={TrendingUp}
+        chart={
+          <EvolutionTimeline
+            data={implementationEvolution}
+            lines={[{ dataKey: 'geral', name: 'Aderência Geral (%)', color: '#00ade8' }]}
+          />
+        }
+        insight={{
+          value: "45%",
+          label: "aderência atual",
+          trend: {
+            value: 200,
+            direction: 'up'
+          }
+        }}
+        status="success"
+        height="lg"
+      />
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 8: CONTROLES TRABALHADOS ==========
+function Slide08_ControlesTrabalhados() {
+  const trabalhados = [
+    { id: '2', name: '2 - Inventário e Controle de Ativos de Software', icon: Laptop },
+    { id: '3', name: '3 - Proteção de dados', icon: Lock },
+    { id: '4', name: '4 - Configuração segura de ativos e softwares', icon: Server },
+    { id: '5', name: '5 - Estabelecer e Manter um inventário de contas', icon: Users },
+    { id: '6', name: '6 - Gerenciamento de controle de acessos', icon: Shield },
+    { id: '8', name: '8 - Gerenciamento de log de auditoria', icon: FileText },
+    { id: '9', name: '9 - Proteções de e-mail e navegadores da Web', icon: Shield },
+    { id: '13', name: '13 - Monitoramento e proteção de rede', icon: Activity },
+  ]
+
+  return (
+    <SlideLayout
+      title="Controles Trabalhados"
+      subtitle="8 controles prioritários em foco"
+      icon={CheckCircle2}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <InfoPanel variant="highlight" status="info">
+          <p className="text-lg">
+            A equipe de segurança está concentrada nestes <strong>8 controles prioritários</strong> que
+            trazem maior redução de risco imediato para o escritório.
+          </p>
+        </InfoPanel>
+
+        <FeatureList
+          items={trabalhados.map(c => ({
+            id: c.id,
+            title: c.name,
+            icon: c.icon
+          }))}
+          columns={2}
+          variant="default"
+          showCheckmarks={true}
+          staggerDelay={0.1}
         />
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-xl md:text-2xl text-slate-300 font-light"
-        >
-          {data.subtitle}
-        </motion.p>
-
-        {/* Client & Date */}
-        {(data.client || data.date) && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="flex items-center justify-center gap-6 text-slate-400 text-lg"
-          >
-            {data.client && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full" />
-                <span>{data.client}</span>
-              </div>
-            )}
-            {data.date && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full" />
-                <span>{data.date}</span>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </div>
-    </motion.div>
-  )
-}
-
-function ContentSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col h-screen gap-8 px-8 py-12 md:px-16"
-    >
-      <h2 className="text-4xl md:text-5xl font-light text-slate-100 border-l-4 border-blue-500 pl-6">
-        {data.title}
-      </h2>
-      <div className="flex-1 space-y-6 overflow-y-auto pr-4 mt-8">
-        {data.items.map((item: string, i: number) => (
-          <motion.p
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className={`text-xl leading-relaxed ${item.startsWith('•') ? 'text-slate-300 pl-4' :
-              item === '' ? 'h-4' :
-                'text-slate-200 font-medium'
-              }`}
-          >
-            {item}
-          </motion.p>
-        ))}
-      </div>
-    </motion.div>
-  )
-}
-
-function TableSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-    >
-      <div className="space-y-2">
-        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-          {data.title}
-        </h2>
-        {data.subtitle && (
-          <p className="text-slate-400 text-lg">{data.subtitle}</p>
-        )}
-      </div>
-      <div className="flex-1 overflow-hidden bg-slate-900/50 rounded-2xl border border-slate-800 p-1">
-        <CISControlsTable controls={data.data} />
-      </div>
-    </motion.div>
-  )
-}
-
-function ChartSlide({ data, type }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-    >
-      <div className="space-y-2">
-        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-          {data.title}
-        </h2>
-        {data.subtitle && (
-          <p className="text-slate-400 text-lg">{data.subtitle}</p>
-        )}
-      </div>
-      <div className="flex-1 bg-slate-850/50 rounded-2xl border border-slate-800 p-6 backdrop-blur-sm flex items-center justify-center">
-        {type === 'radar' && <MaturityRadar data={data.data} />}
-        {type === 'chart-bar' && <CisStatusChart data={data.data} />}
-        {type === 'chart-line' && <EvolutionTimeline data={data.data} lines={data.lines} yAxisLabel={data.yAxisLabel} />}
-        {type === 'vuln-chart' && <VulnerabilityEvolutionChart data={data.data} />}
-        {type === 'vuln-trend' && <VulnerabilityEvolutionChart data={data.data} />}
-      </div>
-    </motion.div>
-  )
-}
-
-function GridSlide({ data, type }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-    >
-      <div className="space-y-2">
-        <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-          {data.title}
-        </h2>
-      </div>
-      <div className="flex-1 overflow-y-auto pr-2">
-        {type === 'pentest' && <ImprovedPentestGrid applications={data.data} />}
-        {type === 'tasks' && <ImprovedTaskGrid tasks={data.tasks} />}
-      </div>
-    </motion.div>
-  )
-}
-
-function ContactSlide({ data }: any) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center h-screen gap-12 px-4 relative"
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 to-slate-900" />
-
-      <div className="z-10 text-center space-y-8">
-        <h2 className="text-5xl md:text-6xl font-light text-slate-100">
-          {data.name}
-        </h2>
-        <div className="space-y-4">
-          <p className="text-3xl text-blue-500 font-montserrat font-medium">
-            <BrandWordmark word={data.title.replace('.', '')} />
-          </p>
-          <div className="h-px w-24 bg-slate-700 mx-auto" />
-          <p className="text-xl text-slate-300">{data.email}</p>
-          <p className="text-xl text-slate-300">{data.phone}</p>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-// Renderizador Principal
-function SlideRenderer({ slide }: { slide: any }) {
-  switch (slide.type) {
-    case 'title':
-      return <TitleSlide data={slide} />
-
-    // Executive Overview (NEW)
-    case 'executive-overview':
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex flex-col h-screen py-12"
-        >
-          <div className="px-8 mb-6">
-            <h2 className="text-4xl font-light text-slate-100 border-l-4 border-primary pl-6">
-              {slide.title}
-            </h2>
-          </div>
-          <ExecutiveOverview
-            data={{
-              adherenceIG2: implementationEvolution[implementationEvolution.length - 1].geral,
-              workedControls: workedControls.length,
-              totalControls: cisControls.length,
-              vulnerabilitiesResolved: 418,
-              totalVulnerabilities: 771,
-              maturityLevel: 'Repetitivo',
-              maturityProgress: maturityEvolution[maturityEvolution.length - 1].nivel
-            }}
-          />
-        </motion.div>
-      )
-
-    // Enhanced Content (NEW)
-    case 'enhanced-content':
-      return <EnhancedContentSlide {...slide} />
-
-    // Vulnerability Metrics (NEW)
-    case 'vuln-metrics':
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-        >
-          <div className="space-y-2">
-            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-              {slide.title}
-            </h2>
-            {slide.subtitle && (
-              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
-            )}
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2">
-            <VulnerabilityMetrics
-              data={{
-                total: 406,
-                criticas: 22,
-                altas: 86,
-                medias: 202,
-                baixas: 96,
-                tratadas: 418,
-                novas: 53,
-                escopo: vulnerabilityScanScope
-              }}
+        <ChartCard
+          title="Evolução - Controles Trabalhados"
+          subtitle="Progresso específico nos controles prioritários"
+          chart={
+            <EvolutionTimeline
+              data={workedEvolution}
+              lines={[{ dataKey: 'trabalhados', name: 'Controles Trabalhados (%)', color: '#22c55e' }]}
             />
-          </div>
-        </motion.div>
-      )
-
-    // Improved Pentest Grid (NEW)
-    case 'improved-pentest':
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-        >
-          <div className="space-y-2">
-            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-              {slide.title}
-            </h2>
-            {slide.subtitle && (
-              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
-            )}
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2">
-            <ImprovedPentestGrid applications={slide.data} />
-          </div>
-        </motion.div>
-      )
-
-    // Improved Task Grid (NEW)
-    case 'improved-tasks':
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="flex flex-col h-screen gap-6 px-8 py-10 md:px-12"
-        >
-          <div className="space-y-2">
-            <h2 className="text-3xl md:text-4xl font-light text-slate-100">
-              {slide.title}
-            </h2>
-            {slide.subtitle && (
-              <p className="text-slate-400 text-lg">{slide.subtitle}</p>
-            )}
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2">
-            <ImprovedTaskGrid tasks={slide.tasks} />
-          </div>
-        </motion.div>
-      )
-
-    // Original types
-    case 'content':
-      return <ContentSlide data={slide} />
-    case 'cis-table':
-      return <TableSlide data={slide} />
-    case 'divider':
-      return <SectionDivider title={slide.title} subtitle={slide.subtitle} />
-    case 'radar':
-    case 'chart-bar':
-    case 'chart-line':
-    case 'vuln-chart':
-    case 'vuln-trend':
-      return <ChartSlide data={slide} type={slide.type} />
-    case 'pentest':
-    case 'tasks':
-      return <GridSlide data={slide} type={slide.type} />
-    case 'contact':
-      return <ContactSlide data={slide} />
-    default:
-      return (
-        <div className="flex items-center justify-center h-screen text-slate-500">
-          Slide type not supported: {slide.type}
-        </div>
-      )
-  }
+          }
+          insight={{
+            value: "82%",
+            label: "aderência nos prioritários"
+          }}
+          status="success"
+          height="md"
+        />
+      </ContentContainer>
+    </SlideLayout>
+  )
 }
 
-// Componente Principal da Página
-export default function Presentation() {
+// ========== SLIDE 9: RADAR MATURIDADE ==========
+function Slide09_RadarMaturidade() {
+  return (
+    <SlideLayout
+      title="Maturidade por Controle"
+      subtitle="Análise de maturidade individual"
+      icon={Activity}
+      variant="default"
+    >
+      <ChartCard
+        title="Radar de Maturidade"
+        subtitle="Nível de implementação por controle CIS"
+        icon={Activity}
+        chart={<MaturityRadar data={currentMaturity} />}
+        insight={{
+          value: "Repetitivo",
+          label: "nível médio atual"
+        }}
+        status="info"
+        height="xl"
+        badge={{
+          label: "Objetivo: Definido",
+          variant: "default"
+        }}
+      />
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 10: EVOLUÇÃO MATURIDADE ==========
+function Slide10_EvolucaoMaturidade() {
+  return (
+    <SlideLayout
+      title="Evolução da Maturidade"
+      subtitle="Nível médio ao longo do tempo"
+      icon={TrendingUp}
+      variant="default"
+    >
+      <ChartCard
+        title="Progressão de Maturidade"
+        subtitle="1=Inicial, 2=Repetitivo, 3=Definido, 4=Gerenciado, 5=Otimizado"
+        icon={TrendingUp}
+        chart={
+          <EvolutionTimeline
+            data={maturityEvolution}
+            lines={[{ dataKey: 'nivel', name: 'Nível Médio (%)', color: '#f59e0b' }]}
+            yAxisLabel="Maturidade (%)"
+          />
+        }
+        insight={{
+          value: `${maturityEvolution[maturityEvolution.length - 1].nivel}%`,
+          label: "maturidade atual"
+        }}
+        status="warning"
+        height="lg"
+      />
+
+      <InfoPanel variant="bordered" status="info" className="mt-6">
+        <p className="text-base">
+          <strong>Insight:</strong> A maturidade evolui mais lentamente que a implementação técnica,
+          pois depende de formalização de processos, treinamento de pessoas e governança estabelecida.
+        </p>
+      </InfoPanel>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 11: DIVISOR VULNERABILIDADES ==========
+function Slide11_DivisorVulnerabilidades() {
+  return <SectionDivider title="Gestão de Vulnerabilidades" subtitle="Scans Contínuos e Tratamento Proativo" />
+}
+
+// ========== SLIDE 12: EVOLUÇÃO VULNERABILIDADES ==========
+function Slide12_EvolucaoVulnerabilidades() {
+  const latestVuln = totalVulnerabilitiesTrend[totalVulnerabilitiesTrend.length - 1]
+  const previousVuln = totalVulnerabilitiesTrend[0]
+
+  const metrics = [
+    {
+      id: 'total',
+      label: 'Total Atual',
+      value: latestVuln.total,
+      icon: AlertCircle,
+      trend: {
+        value: Math.round(((previousVuln.total - latestVuln.total) / previousVuln.total) * 100),
+        direction: 'down' as const,
+        label: 'redução em 30 dias'
+      },
+      status: 'success' as const,
+      subtitle: `De ${previousVuln.total} para ${latestVuln.total}`
+    },
+    {
+      id: 'criticas',
+      label: 'Críticas',
+      value: latestVuln.criticas,
+      icon: AlertTriangle,
+      trend: {
+        value: Math.round(((previousVuln.criticas - latestVuln.criticas) / previousVuln.criticas) * 100),
+        direction: 'down' as const,
+        label: 'redução de 94%'
+      },
+      status: latestVuln.criticas > 50 ? 'danger' as const : 'warning' as const,
+      subtitle: `De ${previousVuln.criticas} para ${latestVuln.criticas}`
+    },
+    {
+      id: 'altas',
+      label: 'Altas',
+      value: latestVuln.altas,
+      icon: AlertTriangle,
+      status: 'warning' as const,
+      subtitle: 'Prioridade de tratamento'
+    },
+    {
+      id: 'escopo',
+      label: 'Ativos Monitorados',
+      value: vulnerabilityScanScope.total,
+      icon: Server,
+      status: 'info' as const,
+      subtitle: `${vulnerabilityScanScope.servidores} servidores + ${vulnerabilityScanScope.estacoes} estações`
+    },
+  ]
+
+  return (
+    <SlideLayout
+      title="Gestão de Vulnerabilidades"
+      subtitle="Panorama atual e evolução"
+      icon={Shield}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <MetricGrid
+          metrics={metrics}
+          columns={4}
+          variant="detailed"
+          staggerDelay={0.08}
+        />
+
+        <ChartCard
+          title="Evolução: Novas vs Tratadas"
+          subtitle="Tendência mensal de tratamento (Set/25 - Out/25)"
+          icon={Activity}
+          chart={<VulnerabilityEvolutionChart data={vulnerabilityEvolution} />}
+          insight={{
+            value: "418",
+            label: "tratadas em Out/25"
+          }}
+          status="success"
+          height="md"
+        />
+
+        <InfoPanel variant="highlight" status="success">
+          <p className="text-lg">
+            <strong>Progresso significativo:</strong> Redução de 47% no total (771 → 406) e 94% nas
+            críticas (345 → 22), demonstrando efetividade do programa de gestão de vulnerabilidades.
+          </p>
+        </InfoPanel>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 13: PENTEST ==========
+function Slide13_Pentest() {
+  return (
+    <SlideLayout
+      title="Testes de Penetração"
+      subtitle="Avaliação de Segurança Aplicacional"
+      icon={FileSearch}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <InfoPanel variant="highlight" status="info">
+          <p className="text-lg">
+            <strong>Pentest</strong> simula ataques reais para identificar vulnerabilidades em aplicações.
+            Diferente de scanners automáticos, envolve análise manual por especialistas em segurança.
+          </p>
+        </InfoPanel>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <DataCard
+            title="Aplicações Testadas"
+            value={pentestSummary.totalApps}
+            icon={Server}
+            status="info"
+            subtitle="Aplicações corporativas críticas"
+          >
+            <div className="mt-3 space-y-1.5 text-sm text-neutral-300">
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-green-400" />iManage Work</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-green-400" />Sophia</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-green-400" />Legal One</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-green-400" />Legal Manager</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-green-400" />Suite CRM</div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="Vulnerabilidades"
+            value={pentestSummary.totalVulnerabilities}
+            icon={AlertCircle}
+            status="success"
+            subtitle="Nenhuma crítica"
+          >
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="p-2 rounded bg-yellow-500/10 border border-yellow-500/20 text-center">
+                <div className="text-xl font-bold text-yellow-400">{pentestSummary.altas}</div>
+                <div className="text-xs text-neutral-400">Altas</div>
+              </div>
+              <div className="p-2 rounded bg-blue-500/10 border border-blue-500/20 text-center">
+                <div className="text-xl font-bold text-blue-400">{pentestSummary.medias}</div>
+                <div className="text-xs text-neutral-400">Médias</div>
+              </div>
+              <div className="p-2 rounded bg-green-500/10 border border-green-500/20 text-center">
+                <div className="text-xl font-bold text-green-400">{pentestSummary.baixas}</div>
+                <div className="text-xs text-neutral-400">Baixas</div>
+              </div>
+              <div className="p-2 rounded bg-green-500/10 border border-green-500/20 text-center">
+                <div className="text-xl font-bold text-green-400">{pentestSummary.criticas}</div>
+                <div className="text-xs text-neutral-400">Críticas</div>
+              </div>
+            </div>
+          </DataCard>
+        </div>
+
+        <InfoPanel variant="bordered" status="success">
+          <p className="text-base">
+            <strong>Resultado:</strong> Boa postura de segurança aplicacional. Vulnerabilidades altas e médias em tratamento.
+          </p>
+        </InfoPanel>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 14: DIVISOR TAREFAS ==========
+function Slide14_DivisorTarefas() {
+  return <SectionDivider title="Plano de Ação" subtitle="Roadmap de Implementação" />
+}
+
+// ========== SLIDE 15: TAREFAS ==========
+function Slide15_Tarefas() {
+  const concluidas = tarefas.filter(t => t.status === 'concluido' && t.priority === 'alto').slice(0, 4)
+  const emAndamento = tarefas.filter(t => t.status === 'em-andamento' && t.priority === 'alto')
+  const pendentes = tarefas.filter(t => t.status === 'pendente' && t.priority === 'alto').slice(0, 4)
+
+  return (
+    <SlideLayout
+      title="Status das Tarefas"
+      subtitle="Principais entregas e iniciativas"
+      icon={CheckSquare}
+      variant="default"
+    >
+      <ContentContainer variant="grid" gap={6}>
+        {/* Metrics */}
+        <div className="grid grid-cols-3 gap-4 mb-2">
+          <DataCard title="Concluídas" value={tarefas.filter(t => t.status === 'concluido').length} icon={CheckCircle2} status="success" />
+          <DataCard title="Em Progresso" value={tarefas.filter(t => t.status === 'em-andamento').length} icon={Activity} status="info" />
+          <DataCard title="Pendentes" value={tarefas.filter(t => t.status === 'pendente').length} icon={Clock} status="warning" />
+        </div>
+
+        {/* Três colunas */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Concluídas */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-green-400 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4" />Concluídas
+            </h3>
+            {concluidas.map(t => (
+              <div key={t.id} className="p-2.5 rounded bg-green-500/5 border border-green-500/20">
+                <p className="text-xs font-medium text-neutral-100">{t.titulo}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Em Andamento */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-blue-400 flex items-center gap-1.5">
+              <Activity className="w-4 h-4" />Em Progresso
+            </h3>
+            {emAndamento.map(t => (
+              <div key={t.id} className="p-2.5 rounded bg-blue-500/5 border border-blue-500/20">
+                <p className="text-xs font-medium text-neutral-100 mb-1.5">{t.titulo}</p>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500" style={{ width: `${t.progress}%` }} />
+                  </div>
+                  <span className="text-xs font-bold text-blue-400">{t.progress}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pendentes */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-yellow-400 flex items-center gap-1.5">
+              <Clock className="w-4 h-4" />Pendentes
+            </h3>
+            {pendentes.map(t => (
+              <div key={t.id} className="p-2.5 rounded bg-yellow-500/5 border border-yellow-500/20">
+                <p className="text-xs font-medium text-neutral-100">{t.titulo}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 16: DIVISOR PONTOS ATENÇÃO ==========
+function Slide16_DivisorPontosAtencao() {
+  return <SectionDivider title="Pontos de Atenção" subtitle="Riscos e Recomendações" />
+}
+
+// ========== SLIDE 17: PONTOS DE ATENÇÃO ==========
+function Slide17_PontosAtencao() {
+  return (
+    <SlideLayout
+      title="Principais Pontos de Atenção"
+      subtitle="Questões que requerem priorização executiva"
+      icon={AlertTriangle}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={5}>
+        <InfoPanel variant="highlight" status="warning">
+          <p className="text-base">
+            Fundamentais para evoluir de <strong>"Repetitivo"</strong> para <strong>"Definido"</strong> em maturidade.
+          </p>
+        </InfoPanel>
+
+        <div className="grid grid-cols-1 gap-3">
+          {pontosAtencao.map((ponto, i) => (
+            <StatusIndicator
+              key={i}
+              status={ponto.impacto === 'alto' ? 'danger' : 'warning'}
+              label={ponto.titulo}
+              description={ponto.descricao}
+              icon={ponto.impacto === 'alto' ? AlertTriangle : AlertCircle}
+              size="md"
+              showIcon={true}
+            />
+          ))}
+        </div>
+
+        <InfoPanel variant="bordered" status="info">
+          <div className="space-y-2 text-sm">
+            <p className="font-semibold text-primary-400">Recomendações:</p>
+            <div className="grid grid-cols-2 gap-2 text-neutral-300">
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
+                <span>Aprovar políticas e normas desenvolvidas</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
+                <span>Formalizar Comitê de Segurança</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
+                <span>Retomar LGPD e awareness</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
+                <span>Implantar gestão de incidentes</span>
+              </div>
+            </div>
+          </div>
+        </InfoPanel>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// Main Component
+export default function ProfessionalPresentation() {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState<Direction>('forward')
-  const [showNotes, setShowNotes] = useState(false)
   const [showMinimap, setShowMinimap] = useState(false)
   const [showPresenter, setShowPresenter] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [theme, setTheme] = useState<'dark' | 'high-contrast'>('dark')
   const router = useRouter()
+
+  const slides = [
+    { component: Slide01_LogoTrustness, notes: 'Logo Trustness - abertura da apresentação' },
+    { component: Slide02_Capa, notes: 'Governança de Segurança da Informação - Manesco Advogados' },
+    { component: Slide03_ContextualizacaoCIS, notes: 'CIS Controls v8.1 IG2 - padrão global de defesa cibernética' },
+    { component: Slide04_Lista18Controles, notes: 'Escopo completo: 18 controles do IG2' },
+    { component: Slide05_DivisorEvolucao, notes: 'Divisor: Evolução dos Controles' },
+    { component: Slide06_ManescoVsMercado, notes: 'Comparativo Manesco vs referência de mercado' },
+    { component: Slide07_EvolucaoTemporal, notes: 'Evolução de 15% para 45% em 23 meses' },
+    { component: Slide08_ControlesTrabalhados, notes: '8 controles prioritários com 82% de aderência' },
+    { component: Slide09_RadarMaturidade, notes: 'Radar mostrando maturidade por controle' },
+    { component: Slide10_EvolucaoMaturidade, notes: 'Evolução da maturidade geral ao longo do tempo' },
+    { component: Slide11_DivisorVulnerabilidades, notes: 'Divisor: Gestão de Vulnerabilidades' },
+    { component: Slide12_EvolucaoVulnerabilidades, notes: 'Redução de 47% total e 94% críticas' },
+    { component: Slide13_Pentest, notes: 'Pentests em 5 aplicações: iManage, Sophia, Legal One, Legal Manager, Suite CRM' },
+    { component: Slide14_DivisorTarefas, notes: 'Divisor: Plano de Ação' },
+    { component: Slide15_Tarefas, notes: 'Status das tarefas: concluídas, em andamento e pendentes' },
+    { component: Slide16_DivisorPontosAtencao, notes: 'Divisor: Pontos de Atenção' },
+    { component: Slide17_PontosAtencao, notes: 'Pontos críticos: formalização, governança, LGPD, incidentes' },
+  ]
 
   const nextSlide = () => {
     if (current < slides.length - 1) {
@@ -763,8 +818,7 @@ export default function Presentation() {
 
   const goToSection = (sectionIndex: number) => {
     if (sectionIndex >= 0 && sectionIndex < slideSections.length) {
-      const section = slideSections[sectionIndex]
-      goToSlide(section.startIndex)
+      goToSlide(slideSections[sectionIndex].startIndex)
     }
   }
 
@@ -788,13 +842,12 @@ export default function Presentation() {
     }
   }
 
-  // Advanced keyboard shortcuts
   useKeyboardShortcuts({
     onNext: nextSlide,
     onPrevious: prevSlide,
     onFirst: () => goToSlide(0),
     onLast: () => goToSlide(slides.length - 1),
-    onToggleNotes: () => setShowNotes(prev => !prev),
+    onToggleNotes: () => {},
     onToggleFullscreen: toggleFullscreen,
     onTogglePresenter: () => setShowPresenter(prev => !prev),
     onToggleMinimap: () => setShowMinimap(prev => !prev),
@@ -803,7 +856,6 @@ export default function Presentation() {
     onGotoSection: goToSection,
   })
 
-  // Handle fullscreen change
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement)
@@ -812,20 +864,19 @@ export default function Presentation() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
+  const CurrentSlideComponent = slides[current].component
+
   return (
-    <div className={`min-h-screen flex flex-col font-inter text-slate-200 ${theme === 'high-contrast' ? 'bg-black' : 'bg-slate-950'}`}>
-      {/* Área do Slide */}
+    <div className={`min-h-screen flex flex-col font-inter text-neutral-200 ${theme === 'high-contrast' ? 'bg-black' : 'bg-neutral-950'}`}>
       <div className="flex-1 relative overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
           <PageTransition key={current} direction={direction}>
-            <SlideRenderer slide={slides[current]} />
+            <CurrentSlideComponent />
           </PageTransition>
         </AnimatePresence>
       </div>
 
-      {/* Barra de Controle Avançada */}
-      <div className="bg-slate-900/95 backdrop-blur-sm border-t border-slate-800 px-6 py-3 z-50">
-        {/* Section Progress */}
+      <div className="bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800 px-6 py-3 z-50">
         <div className="mb-3">
           <SectionProgress
             sections={slideSections}
@@ -835,7 +886,6 @@ export default function Presentation() {
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          {/* Left: Progress Info */}
           <div className="flex-1 max-w-sm">
             <ProgressIndicator
               current={current}
@@ -844,108 +894,53 @@ export default function Presentation() {
             />
           </div>
 
-          {/* Center: Navigation */}
           <div className="flex items-center gap-2">
-            <Button
-              onClick={prevSlide}
-              disabled={current === 0}
-              variant="ghost"
-              size="sm"
-              className="text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30"
-              title="Anterior (←)"
-            >
+            <Button onClick={prevSlide} disabled={current === 0} variant="ghost" size="sm">
               <ChevronLeft className="w-5 h-5" />
             </Button>
-            <Button
-              onClick={nextSlide}
-              disabled={current === slides.length - 1}
-              variant="ghost"
-              size="sm"
-              className="text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30"
-              title="Próximo (→ ou Space)"
-            >
+            <Button onClick={nextSlide} disabled={current === slides.length - 1} variant="ghost" size="sm">
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
 
-          {/* Right: Tools */}
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setShowMinimap(true)}
-              variant="ghost"
-              size="sm"
-              className="text-slate-500 hover:text-slate-300"
-              title="Minimap (m)"
-            >
+            <Button onClick={() => setShowMinimap(true)} variant="ghost" size="sm">
               <Map className="w-4 h-4" />
             </Button>
-
             <PresenterView
               isOpen={showPresenter}
               onToggle={() => setShowPresenter(prev => !prev)}
-              currentSlide={slides[current]}
-              nextSlide={current < slides.length - 1 ? slides[current + 1] : null}
+              currentSlide={{ speakerNotes: slides[current].notes }}
+              nextSlide={current < slides.length - 1 ? { speakerNotes: slides[current + 1].notes } : null}
               currentIndex={current}
               totalSlides={slides.length}
             />
-
-            <Button
-              onClick={toggleFullscreen}
-              variant="ghost"
-              size="sm"
-              className="text-slate-500 hover:text-slate-300"
-              title="Tela Cheia (f)"
-            >
+            <Button onClick={toggleFullscreen} variant="ghost" size="sm">
               {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
             </Button>
-
-            <Button
-              onClick={() => setTheme(prev => prev === 'dark' ? 'high-contrast' : 'dark')}
-              variant="ghost"
-              size="sm"
-              className="text-slate-500 hover:text-slate-300"
-              title="Alternar Tema (t)"
-            >
+            <Button onClick={() => setTheme(prev => prev === 'dark' ? 'high-contrast' : 'dark')} variant="ghost" size="sm">
               <Palette className="w-4 h-4" />
             </Button>
-
-            <Button
-              onClick={() => setShowHelp(true)}
-              variant="ghost"
-              size="sm"
-              className="text-slate-500 hover:text-slate-300"
-              title="Atalhos (?)"
-            >
+            <Button onClick={() => setShowHelp(true)} variant="ghost" size="sm">
               <HelpCircle className="w-4 h-4" />
             </Button>
-
-            <Button
-              onClick={handleLogout}
-              variant="ghost"
-              size="sm"
-              className="text-slate-500 hover:text-red-400 hover:bg-red-500/10"
-              title="Sair"
-            >
+            <Button onClick={handleLogout} variant="ghost" size="sm">
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Advanced Overlays */}
       <MinimapOverlay
         isOpen={showMinimap}
         onClose={() => setShowMinimap(false)}
-        slides={slides}
+        slides={slides.map(s => ({ type: 'slide', speakerNotes: s.notes }))}
         currentSlide={current}
         onNavigate={goToSlide}
         sections={slideSections}
       />
 
-      <KeyboardShortcutsPanel
-        isOpen={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
+      <KeyboardShortcutsPanel isOpen={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   )
 }
