@@ -100,7 +100,7 @@ const slideSections = [
   { title: 'Pentests', startIndex: 12, endIndex: 12, icon: <FileSearch className="w-4 h-4" /> },
   { title: 'Tarefas', startIndex: 13, endIndex: 15, icon: <CheckSquare className="w-4 h-4" /> },
   { title: 'Pontos de Atenção', startIndex: 16, endIndex: 17, icon: <AlertCircle className="w-4 h-4" /> },
-  { title: 'n.secops', startIndex: 18, endIndex: 26, icon: <ShieldCheck className="w-4 h-4" /> },
+  { title: 'n.secops', startIndex: 18, endIndex: 25, icon: <ShieldCheck className="w-4 h-4" /> },
 ]
 
 // Helper para renderizar n.secops e ness. com ponto colorido
@@ -1084,29 +1084,71 @@ function Slide17_PontosAtencao() {
 
 // ========== SLIDE 18: DIVISOR NSECOPS ==========
 function Slide18_DivisorNsecops() {
-  return <SectionDivider title={<NsecopsText />} subtitle="Serviços de Segurança Gerenciada" />
-}
-
-// ========== SLIDE 19: VISÃO GERAL NSECOPS ==========
-function Slide19_VisaoGeralNsecops() {
   return (
-    <SlideLayout
-      title={<NsecopsText />}
-      subtitle="Segurança gerenciada para organizações que precisam reduzir risco e tempo de resposta (24/7)"
-      icon={ShieldCheck}
-      variant="default"
-    >
-      <ContentContainer variant="stack" gap={6}>
-        <InfoPanel variant="glassmorphic" status="info">
-          <p className="text-xl leading-relaxed">
+    <div className="flex flex-col items-center justify-center h-screen gap-8 px-8 relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Content */}
+      <div className="z-10 space-y-8 text-center max-w-4xl">
+        {/* Título */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-6xl md:text-7xl font-light text-slate-100 tracking-tight">
+            <NsecopsText />
+          </h1>
+        </motion.div>
+
+        {/* Linha decorativa superior */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto max-w-xl"
+        />
+
+        {/* Subtítulo */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="space-y-4"
+        >
+          <p className="text-xl text-slate-400 leading-relaxed">
+            Segurança gerenciada para organizações que precisam reduzir risco e tempo de resposta (24/7)
+          </p>
+        </motion.div>
+
+        {/* Linha decorativa inferior */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto max-w-xl"
+        />
+
+        {/* Descrição */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="pt-4"
+        >
+          <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mx-auto">
             Operação contínua de segurança com <strong className="text-primary-400">SOC 24×7</strong>, 
             <strong className="text-primary-400"> EDR/AV</strong>, <strong className="text-primary-400">patching</strong> e 
             <strong className="text-primary-400"> gestão de vulnerabilidades</strong> — com evidências acionáveis para 
             auditorias e tomada de decisão.
           </p>
-        </InfoPanel>
-      </ContentContainer>
-    </SlideLayout>
+        </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -1561,8 +1603,7 @@ export default function ProfessionalPresentation() {
     { component: Slide15_Tarefas, notes: 'Status das tarefas: concluídas, em andamento e pendentes' },
     { component: Slide16_DivisorPontosAtencao, notes: 'Divisor: Pontos de Atenção' },
     { component: Slide17_PontosAtencao, notes: 'Pontos críticos: formalização, governança, LGPD, incidentes' },
-    { component: Slide18_DivisorNsecops, notes: 'Divisor: n.secops - Serviços de Segurança Gerenciada' },
-    { component: Slide19_VisaoGeralNsecops, notes: 'Visão geral do n.secops - segurança gerenciada 24×7' },
+    { component: Slide18_DivisorNsecops, notes: 'n.secops - Segurança gerenciada 24×7' },
     { component: Slide20_DivisorServicosNsecops, notes: 'Divisor: Serviços Principais do n.secops' },
     { component: Slide21_SOC_SIEM, notes: 'SOC 24×7 e SIEM - Monitoramento e centralização de logs' },
     { component: Slide22_EDR_Vulnerabilidades, notes: 'EDR e Gestão de Vulnerabilidades - Proteção de endpoints' },
