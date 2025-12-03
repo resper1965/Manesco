@@ -163,9 +163,12 @@ interface StatusBadgeProps {
 export function StatusBadge({ status, label, showIcon = true, size = 'md' }: StatusBadgeProps) {
   const config = statusConfig[status]
   const Icon = config.icon
+  
+  // Map 'md' to 'default' since Badge doesn't support 'md'
+  const badgeSize = size === 'md' ? 'default' : size
 
   return (
-    <Badge variant={config.badgeVariant} size={size}>
+    <Badge variant={config.badgeVariant} size={badgeSize}>
       {showIcon && <Icon className="w-3.5 h-3.5 mr-1.5" strokeWidth={2} />}
       {label}
     </Badge>
