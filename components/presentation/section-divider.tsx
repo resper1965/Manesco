@@ -28,25 +28,36 @@ export function SectionDivider({ title, subtitle, className = '' }: SectionDivid
                 <h2 className="text-5xl md:text-6xl font-light text-slate-100 text-center tracking-tight">
                     {title}
                 </h2>
+            </div>
 
-                {/* Linha decorativa inferior */}
+            {subtitle && (
+                <>
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-xl text-slate-400 text-center max-w-2xl"
+                    >
+                        {subtitle}
+                    </motion.p>
+                    
+                    {/* Linha decorativa inferior - abaixo do subtítulo */}
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                        className="h-0.5 w-48 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto"
+                    />
+                </>
+            )}
+
+            {!subtitle && (
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="absolute -bottom-8 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+                    className="h-0.5 w-48 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto"
                 />
-            </div>
-
-            {subtitle && (
-                <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="text-xl text-slate-400 text-center max-w-2xl"
-                >
-                    {subtitle}
-                </motion.p>
             )}
 
             {/* Dot indicator */}

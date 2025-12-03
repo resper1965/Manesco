@@ -154,11 +154,18 @@ function Slide02_Capa() {
             Governança de<br />Segurança da Informação
           </h1>
 
-          <div className="h-1 w-48 bg-gradient-to-r from-transparent via-primary-500 to-transparent mx-auto rounded-full" />
-
           <h2 className="text-3xl md:text-4xl text-primary-400 font-semibold">
             Manesco Advogados
           </h2>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="mt-8"
+        >
+          <div className="h-1 w-48 bg-gradient-to-r from-transparent via-primary-500 to-transparent mx-auto rounded-full" />
         </motion.div>
 
         <motion.div
@@ -257,8 +264,79 @@ function Slide04_Lista18Controles() {
       icon={Target}
       variant="default"
     >
-      <div className="h-full overflow-hidden bg-neutral-900/50 rounded-2xl border border-neutral-800 p-4">
-        <CISControlsTable controls={cisControls} />
+      <div className="h-full overflow-hidden">
+        <div className="grid grid-cols-3 gap-4 h-full auto-rows-fr">
+          {cisControls.map((control, index) => (
+            <motion.div
+              key={control.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.03, duration: 0.3 }}
+              className={`
+                relative flex flex-col p-3 rounded-xl border
+                backdrop-blur-sm transition-all duration-300 group
+                ${control.excluded 
+                  ? 'bg-neutral-900/30 border-neutral-800/50 opacity-50 grayscale' 
+                  : control.worked
+                  ? 'bg-primary-500/10 border-primary-500/30 hover:border-primary-500/50'
+                  : 'bg-neutral-900/50 border-neutral-800/50 hover:border-primary-500/30'
+                }
+              `}
+            >
+              {/* Número do controle */}
+              <div className={`
+                absolute -top-2 -left-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold
+                ${control.excluded 
+                  ? 'bg-neutral-800 text-neutral-600' 
+                  : control.worked
+                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
+                  : 'bg-neutral-800 text-neutral-400'
+                }
+              `}>
+                {control.id}
+              </div>
+
+              {/* Status badge */}
+              {control.worked && !control.excluded && (
+                <div className="absolute -top-1 -right-1">
+                  <div className="w-3 h-3 rounded-full bg-primary-500 border-2 border-neutral-900" />
+                </div>
+              )}
+
+              {/* Conteúdo */}
+              <div className="flex-1 flex flex-col pt-5">
+                <p className={`
+                  text-sm leading-snug font-medium flex-1
+                  ${control.excluded 
+                    ? 'text-neutral-600' 
+                    : control.worked
+                    ? 'text-neutral-100'
+                    : 'text-neutral-400'
+                  }
+                `}>
+                  {control.name}
+                </p>
+              </div>
+
+              {/* Indicador trabalhado */}
+              {control.worked && !control.excluded && (
+                <div className="mt-2 pt-2 border-t border-primary-500/20">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-primary-400" />
+                    <span className="text-xs text-primary-400 font-medium">Trabalhado</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Indicador excluído */}
+              {control.excluded && (
+                <div className="mt-2 pt-2 border-t border-neutral-800/50">
+                  <span className="text-xs text-neutral-600 font-medium">Excluído</span>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </SlideLayout>
   )
