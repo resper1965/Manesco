@@ -190,12 +190,15 @@ export const workedEvolution = [
     { periodo: 'Nov/25', trabalhados: calcAvg('n25', workedIds) },
 ]
 
-// Slide 12: Evolução da Maturidade (Usando os mesmos dados de evolução percentual como proxy de maturidade para o gráfico)
-// O usuário forneceu "Evolução da Maturidade" em %, então usamos os mesmos dados.
-export const maturityEvolution = implementationEvolution.map(d => ({
-    periodo: d.periodo,
-    nivel: d.geral // Usando % como métrica de maturidade conforme dados
-}))
+// Slide 10: Evolução da Maturidade (Escala 1-5)
+// Dados reais: começou com 1,06 e hoje está em 2,12
+export const maturityEvolution = [
+    { periodo: 'Dez/23', nivel: 1.06 },
+    { periodo: 'Jul/24', nivel: 1.35 },
+    { periodo: 'Mai/25', nivel: 1.75 },
+    { periodo: 'Out/25', nivel: 1.95 },
+    { periodo: 'Nov/25', nivel: 2.12 },
+]
 
 // Slide 11: Maturidade Atual por Controle (Radar)
 // Usando dados de Nov/25

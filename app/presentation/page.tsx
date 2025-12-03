@@ -35,7 +35,17 @@ import {
   Laptop,
   AlertCircle,
   X,
-  Calendar
+  Calendar,
+  Eye,
+  Zap,
+  Bug,
+  Settings,
+  HardDrive,
+  AlertCircle as AlertCircleIcon,
+  Brain,
+  FileBarChart,
+  Network,
+  ShieldCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -89,7 +99,8 @@ const slideSections = [
   { title: 'Vulnerabilidades', startIndex: 10, endIndex: 11, icon: <AlertTriangle className="w-4 h-4" /> },
   { title: 'Pentests', startIndex: 12, endIndex: 12, icon: <FileSearch className="w-4 h-4" /> },
   { title: 'Tarefas', startIndex: 13, endIndex: 15, icon: <CheckSquare className="w-4 h-4" /> },
-  { title: 'Pontos de Atenção', startIndex: 16, endIndex: 16, icon: <AlertCircle className="w-4 h-4" /> },
+  { title: 'Pontos de Atenção', startIndex: 16, endIndex: 17, icon: <AlertCircle className="w-4 h-4" /> },
+  { title: 'n.secops', startIndex: 18, endIndex: 25, icon: <ShieldCheck className="w-4 h-4" /> },
 ]
 
 // ========== SLIDE 1: LOGO TRUSTNESS ==========
@@ -551,38 +562,71 @@ function Slide09_RadarMaturidade() {
 
 // ========== SLIDE 10: EVOLUÇÃO MATURIDADE ==========
 function Slide10_EvolucaoMaturidade() {
+  const latest = maturityEvolution[maturityEvolution.length - 1]
+  const first = maturityEvolution[0]
+  const crescimento = ((latest.nivel - first.nivel) / first.nivel * 100).toFixed(0)
+  
   return (
     <SlideLayout
       title="Evolução da Maturidade"
-      subtitle="Nível médio ao longo do tempo"
+      subtitle="Nível médio ao longo do tempo (escala 1-5)"
       icon={TrendingUp}
       variant="default"
     >
-      <ChartCard
-        title="Progressão de Maturidade"
-        subtitle="1=Inicial, 2=Repetitivo, 3=Definido, 4=Gerenciado, 5=Otimizado"
-        icon={TrendingUp}
-        chart={
-          <EvolutionTimeline
-            data={maturityEvolution}
-            lines={[{ dataKey: 'nivel', name: 'Nível Médio (%)', color: '#f59e0b' }]}
-            yAxisLabel="Maturidade (%)"
+      <ContentContainer variant="stack" gap={4}>
+        {/* Métricas */}
+        <div className="grid grid-cols-3 gap-4">
+          <DataCard
+            title="Início (Dez/23)"
+            value={`${first.nivel}`}
+            icon={Clock}
+            status="neutral"
+            subtitle="Baseline inicial"
           />
-        }
-        insight={{
-          value: `${maturityEvolution[maturityEvolution.length - 1].nivel}%`,
-          label: "maturidade atual"
-        }}
-        status="warning"
-        height="md"
-      />
+          <DataCard
+            title="Atual (Nov/25)"
+            value={`${latest.nivel}`}
+            icon={TrendingUp}
+            status="success"
+            subtitle="Maturidade atual"
+          />
+          <DataCard
+            title="Crescimento"
+            value={`${crescimento}%`}
+            icon={Activity}
+            status="success"
+            subtitle="Em 23 meses"
+          />
+        </div>
 
-      <InfoPanel variant="bordered" status="info" className="mt-4">
-        <p className="text-sm">
-          <strong>Insight:</strong> A maturidade evolui mais lentamente que a implementação técnica,
-          pois depende de formalização de processos, treinamento de pessoas e governança estabelecida.
-        </p>
-      </InfoPanel>
+        {/* Gráfico */}
+        <ChartCard
+          title="Progressão de Maturidade"
+          subtitle="1=Inicial, 2=Repetitivo, 3=Definido, 4=Gerenciado, 5=Otimizado"
+          icon={TrendingUp}
+          chart={
+            <EvolutionTimeline
+              data={maturityEvolution}
+              lines={[{ dataKey: 'nivel', name: 'Nível de Maturidade', color: '#f59e0b' }]}
+              yAxisLabel="Maturidade"
+            />
+          }
+          insight={{
+            value: `${latest.nivel}`,
+            label: "maturidade atual"
+          }}
+          status="warning"
+          height="md"
+        />
+
+        <InfoPanel variant="bordered" status="info">
+          <p className="text-sm">
+            <strong>Insight:</strong> A maturidade evolui mais lentamente que a implementação técnica,
+            pois depende de formalização de processos, treinamento de pessoas e governança estabelecida.
+            Evoluímos de <strong>1,06 (Inicial)</strong> para <strong>2,12 (Repetitivo)</strong>.
+          </p>
+        </InfoPanel>
+      </ContentContainer>
     </SlideLayout>
   )
 }
@@ -1009,6 +1053,378 @@ function Slide17_PontosAtencao() {
   )
 }
 
+// ========== SLIDE 18: DIVISOR NSECOPS ==========
+function Slide18_DivisorNsecops() {
+  return <SectionDivider title="n.secops" subtitle="Serviços de Segurança Gerenciada" />
+}
+
+// ========== SLIDE 19: VISÃO GERAL NSECOPS ==========
+function Slide19_VisaoGeralNsecops() {
+  return (
+    <SlideLayout
+      title="n.secops"
+      subtitle="Serviço de segurança gerenciada 24×7"
+      icon={ShieldCheck}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <InfoPanel variant="glassmorphic" status="info">
+          <p className="text-xl leading-relaxed">
+            Serviço de segurança gerenciada <strong className="text-primary-400">24×7</strong> para reduzir 
+            risco e tempo de resposta a incidentes.
+          </p>
+        </InfoPanel>
+
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="Redução de Tempo de Detecção"
+            value="Semanas → Minutos"
+            subtitle="Intervalo entre invasão e detecção"
+            icon={Zap}
+            status="success"
+          >
+            <p className="text-sm text-neutral-400 mt-3">
+              Focado em diminuir o intervalo entre invasão e detecção de semanas para minutos, 
+              com equipe especializada operando continuamente.
+            </p>
+          </DataCard>
+
+          <DataCard
+            title="Operação Contínua"
+            value="24×7"
+            subtitle="Monitoramento ininterrupto"
+            icon={Eye}
+            status="success"
+          >
+            <p className="text-sm text-neutral-400 mt-3">
+              Equipe especializada em segurança operando continuamente para garantir proteção 
+              proativa e resposta rápida a incidentes.
+            </p>
+          </DataCard>
+        </div>
+
+        <InfoPanel variant="highlight" status="success">
+          <p className="text-lg">
+            <strong>Benefícios:</strong> Redução significativa de risco, detecção proativa de ameaças, 
+            resposta rápida a incidentes e visibilidade completa do ambiente de segurança.
+          </p>
+        </InfoPanel>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 20: DIVISOR SERVIÇOS NSECOPS ==========
+function Slide20_DivisorServicosNsecops() {
+  return <SectionDivider title="Serviços Principais" subtitle="Capacidades e Benefícios" />
+}
+
+// ========== SLIDE 21: SOC E SIEM ==========
+function Slide21_SOC_SIEM() {
+  return (
+    <SlideLayout
+      title="SOC 24×7 e SIEM"
+      subtitle="Monitoramento e centralização de logs"
+      icon={Eye}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="SOC 24×7"
+            value="Monitoramento Contínuo"
+            subtitle="Ambientes on-premise e cloud"
+            icon={Network}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Monitoramento contínuo de ambientes
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Detecção e resposta em tempo real a ameaças
+              </div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="SIEM"
+            value="Centralização de Logs"
+            subtitle="Correlação de eventos de segurança"
+            icon={Activity}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Coleta e correlação de eventos (AD, firewalls, EDR)
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Alertas inteligentes e dashboards executivos
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Compliance (ISO, SOC 2, etc.)
+              </div>
+            </div>
+          </DataCard>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 22: EDR E GESTÃO VULNERABILIDADES ==========
+function Slide22_EDR_Vulnerabilidades() {
+  return (
+    <SlideLayout
+      title="EDR e Gestão de Vulnerabilidades"
+      subtitle="Proteção de endpoints e varredura contínua"
+      icon={Shield}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="EDR/Antivírus"
+            value="Última Geração"
+            subtitle="Proteção de endpoints"
+            icon={Laptop}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Detecção comportamental e machine learning
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Resposta automatizada a processos suspeitos
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Proteção contra ransomware
+              </div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="Gestão de Vulnerabilidades"
+            value="Varredura Contínua"
+            subtitle="Priorização por criticidade"
+            icon={AlertTriangle}
+            status="warning"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Varredura contínua do ambiente
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Priorização por criticidade e impacto
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Relatórios executivos mensais
+              </div>
+            </div>
+          </DataCard>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 23: PATCH MANAGEMENT E HARDENING ==========
+function Slide23_Patch_Hardening() {
+  return (
+    <SlideLayout
+      title="Patch Management e Hardening"
+      subtitle="Manutenção e configuração segura"
+      icon={Settings}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="Patch Management"
+            value="Gestão de Patches"
+            subtitle="Aplicação orquestrada"
+            icon={Zap}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Aplicação orquestrada de patches críticos
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Janelas de manutenção planejadas
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Evita indisponibilidade
+              </div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="Hardening"
+            value="CIS Benchmarks"
+            subtitle="Configuração segura"
+            icon={ShieldCheck}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Ajuste de configurações de segurança
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Aderência a frameworks reconhecidos
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Alinhamento com CIS Controls
+              </div>
+            </div>
+          </DataCard>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 24: INVENTÁRIO E INCIDENT RESPONSE ==========
+function Slide24_Inventario_Incident() {
+  return (
+    <SlideLayout
+      title="Inventário de Ativos e Incident Response"
+      subtitle="Visibilidade e resposta a incidentes"
+      icon={HardDrive}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="Inventário de Ativos"
+            value="Descoberta Automática"
+            subtitle="Visão centralizada"
+            icon={HardDrive}
+            status="neutral"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Descoberta automática de hardware e software
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Mapeamento de serviços
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Visão centralizada para gestão de risco
+              </div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="Incident Response"
+            value="Playbooks Estruturados"
+            subtitle="Contenção e recuperação"
+            icon={AlertCircle}
+            status="warning"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Playbooks estruturados de contenção
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Erradicação e recuperação de incidentes
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Resposta rápida e coordenada
+              </div>
+            </div>
+          </DataCard>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
+// ========== SLIDE 25: THREAT INTELLIGENCE E RELATÓRIOS ==========
+function Slide25_Threat_Relatorios() {
+  return (
+    <SlideLayout
+      title="Threat Intelligence e Relatórios Executivos"
+      subtitle="Inteligência de ameaças e evidências para auditoria"
+      icon={Brain}
+      variant="default"
+    >
+      <ContentContainer variant="stack" gap={6}>
+        <div className="grid grid-cols-2 gap-6">
+          <DataCard
+            title="Threat Intelligence"
+            value="Feeds de Inteligência"
+            subtitle="Detecção proativa"
+            icon={Brain}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Integração de feeds de inteligência ao SIEM
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Detecção proativa de campanhas
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Indicadores de comprometimento (IOCs)
+              </div>
+            </div>
+          </DataCard>
+
+          <DataCard
+            title="Relatórios Executivos"
+            value="KPIs e Evidências"
+            subtitle="Preparados para auditoria"
+            icon={FileBarChart}
+            status="success"
+          >
+            <div className="mt-3 space-y-2 text-sm text-neutral-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Dashboards e relatórios mensais com KPIs
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                Evidências prontas para auditorias
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                ISO 27001, SOC 2, LGPD
+              </div>
+            </div>
+          </DataCard>
+        </div>
+      </ContentContainer>
+    </SlideLayout>
+  )
+}
+
 // Main Component
 export default function ProfessionalPresentation() {
   const [current, setCurrent] = useState(0)
@@ -1038,6 +1454,14 @@ export default function ProfessionalPresentation() {
     { component: Slide15_Tarefas, notes: 'Status das tarefas: concluídas, em andamento e pendentes' },
     { component: Slide16_DivisorPontosAtencao, notes: 'Divisor: Pontos de Atenção' },
     { component: Slide17_PontosAtencao, notes: 'Pontos críticos: formalização, governança, LGPD, incidentes' },
+    { component: Slide18_DivisorNsecops, notes: 'Divisor: n.secops - Serviços de Segurança Gerenciada' },
+    { component: Slide19_VisaoGeralNsecops, notes: 'Visão geral do n.secops - segurança gerenciada 24×7' },
+    { component: Slide20_DivisorServicosNsecops, notes: 'Divisor: Serviços Principais do n.secops' },
+    { component: Slide21_SOC_SIEM, notes: 'SOC 24×7 e SIEM - Monitoramento e centralização de logs' },
+    { component: Slide22_EDR_Vulnerabilidades, notes: 'EDR e Gestão de Vulnerabilidades - Proteção de endpoints' },
+    { component: Slide23_Patch_Hardening, notes: 'Patch Management e Hardening - Manutenção e configuração segura' },
+    { component: Slide24_Inventario_Incident, notes: 'Inventário de Ativos e Incident Response' },
+    { component: Slide25_Threat_Relatorios, notes: 'Threat Intelligence e Relatórios Executivos' },
   ]
 
   const nextSlide = () => {
