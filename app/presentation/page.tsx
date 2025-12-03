@@ -60,6 +60,7 @@ import { InfoPanel, FeatureList } from '@/components/slides/InfoPanel'
 
 // Chart Components
 import { CISControlsTable } from '@/components/presentation/cis-controls-table'
+import { CISControlsGrid } from '@/components/presentation/cis-controls-grid'
 import { MaturityRadar } from '@/components/presentation/maturity-radar'
 import { EvolutionTimeline } from '@/components/presentation/evolution-timeline'
 import { VulnerabilityEvolutionChart } from '@/components/presentation/vulnerability-chart'
@@ -71,6 +72,7 @@ import { MinimapOverlay } from '@/components/presentation/slide-minimap'
 import { PresenterView } from '@/components/presentation/presenter-mode'
 import { ProgressIndicator, SectionProgress } from '@/components/presentation/progress-indicator'
 import { KeyboardShortcutsPanel, useKeyboardShortcuts } from '@/components/presentation/keyboard-shortcuts'
+import { KeyboardShortcutsHint } from '@/components/presentation/keyboard-shortcuts-hint'
 import { PageTransition, Direction } from '@/components/presentation/slide-transition'
 
 // Data
@@ -299,103 +301,40 @@ function Slide03_ContextualizacaoCIS() {
 
 // ========== SLIDE 4: LISTA 18 CONTROLES ==========
 function Slide04_Lista18Controles() {
+  const trabalhados = cisControls.filter(c => c.worked && !c.excluded).length
+  const total = cisControls.filter(c => !c.excluded).length
+  
   return (
-    <div className="flex flex-col h-screen p-8 gap-4 relative overflow-hidden bg-neutral-950">
-      {/* Header compacto */}
-      <div className="flex items-start gap-4 shrink-0">
-        <div className="shrink-0">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary-500/20 blur-xl rounded-full" />
-            <div className="relative p-3 bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 rounded-xl">
-              <Target className="w-6 h-6 text-primary-500" strokeWidth={1.5} />
-            </div>
+    <SlideLayout
+      title="Escopo CIS v8.1 - IG2"
+      subtitle={`18 Controles de Segurança • ${trabalhados} em foco`}
+      icon={Target}
+      variant="default"
+      className="p-8"
+    >
+      <div className="flex flex-col h-full gap-4">
+        {/* Legenda */}
+        <div className="flex items-center gap-6 text-xs shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-primary-500/15 border-2 border-primary-500/40" />
+            <span className="text-neutral-300">Controles em Foco ({trabalhados})</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-neutral-900/40 border-2 border-neutral-800/50" />
+            <span className="text-neutral-400">Outros Controles ({total - trabalhados})</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-neutral-900/20 border-2 border-neutral-800/40 opacity-40" />
+            <span className="text-neutral-500">Excluído (1)</span>
           </div>
         </div>
-        <div className="flex-1">
-          <h1 className="text-3xl font-light text-neutral-50 tracking-tight leading-tight">
-            Escopo CIS v8.1 - IG2
-          </h1>
-          <p className="text-base text-neutral-400 font-light mt-1">
-            18 Controles de Segurança
-          </p>
+
+        {/* Grid de controles */}
+        <div className="flex-1 overflow-hidden min-h-0">
+          <CISControlsGrid controls={cisControls} />
         </div>
       </div>
-      {/* Conteúdo */}
-      <div className="flex-1 overflow-hidden min-h-0">
-        <div className="grid grid-cols-3 gap-3 h-full auto-rows-fr">
-          {cisControls.map((control, index) => (
-            <motion.div
-              key={control.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.03, duration: 0.3 }}
-              className={`
-                relative flex flex-col p-2 rounded-lg border
-                backdrop-blur-sm transition-all duration-300 group
-                ${control.excluded 
-                  ? 'bg-neutral-900/30 border-neutral-800/50 opacity-50 grayscale' 
-                  : control.worked
-                  ? 'bg-primary-500/10 border-primary-500/30 hover:border-primary-500/50'
-                  : 'bg-neutral-900/50 border-neutral-800/50 hover:border-primary-500/30'
-                }
-              `}
-            >
-              {/* Número do controle */}
-              <div className={`
-                absolute -top-1.5 -left-1.5 w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold
-                ${control.excluded 
-                  ? 'bg-neutral-800 text-neutral-600' 
-                  : control.worked
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
-                  : 'bg-neutral-800 text-neutral-400'
-                }
-              `}>
-                {control.id}
-              </div>
-
-              {/* Status badge */}
-              {control.worked && !control.excluded && (
-                <div className="absolute -top-1 -right-1">
-                  <div className="w-3 h-3 rounded-full bg-primary-500 border-2 border-neutral-900" />
-                </div>
-              )}
-
-              {/* Conteúdo */}
-              <div className="flex-1 flex flex-col pt-4">
-                <p className={`
-                  text-xs leading-snug font-medium flex-1
-                  ${control.excluded 
-                    ? 'text-neutral-600' 
-                    : control.worked
-                    ? 'text-neutral-100'
-                    : 'text-neutral-400'
-                  }
-                `}>
-                  {control.name}
-                </p>
-              </div>
-
-              {/* Indicador trabalhado */}
-              {control.worked && !control.excluded && (
-                <div className="mt-1.5 pt-1.5 border-t border-primary-500/20">
-                  <div className="flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-primary-400" />
-                    <span className="text-[10px] text-primary-400 font-medium">Trabalhado</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Indicador excluído */}
-              {control.excluded && (
-                <div className="mt-1.5 pt-1.5 border-t border-neutral-800/50">
-                  <span className="text-[10px] text-neutral-600 font-medium">Excluído</span>
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
+    </SlideLayout>
   )
 }
 
@@ -1781,6 +1720,7 @@ export default function ProfessionalPresentation() {
       />
 
       <KeyboardShortcutsPanel isOpen={showHelp} onClose={() => setShowHelp(false)} />
+      <KeyboardShortcutsHint />
     </div>
   )
 }
