@@ -108,7 +108,7 @@ function Slide01_LogoTrustness() {
         <div className="relative p-16 rounded-3xl bg-gradient-to-br from-primary-500/10 to-primary-600/5 border-2 border-primary-500/30">
           <div className="text-center space-y-6">
             <div className="space-y-2">
-              <h1 className="text-7xl md:text-8xl font-bold tracking-tight">
+              <h1 className="text-7xl md:text-8xl font-montserrat font-medium tracking-tight">
                 <span className="text-neutral-50">trustness</span>
                 <span className="text-[#00ade8]">.</span>
               </h1>
@@ -259,14 +259,29 @@ function Slide03_ContextualizacaoCIS() {
 // ========== SLIDE 4: LISTA 18 CONTROLES ==========
 function Slide04_Lista18Controles() {
   return (
-    <SlideLayout
-      title="Escopo CIS v8.1 - IG2"
-      subtitle="18 Controles de Segurança"
-      icon={Target}
-      variant="default"
-    >
-      <div className="h-full overflow-hidden">
-        <div className="grid grid-cols-3 gap-4 h-full auto-rows-fr">
+    <div className="flex flex-col h-screen p-8 gap-4 relative overflow-hidden bg-neutral-950">
+      {/* Header compacto */}
+      <div className="flex items-start gap-4 shrink-0">
+        <div className="shrink-0">
+          <div className="relative">
+            <div className="absolute inset-0 bg-primary-500/20 blur-xl rounded-full" />
+            <div className="relative p-3 bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 rounded-xl">
+              <Target className="w-6 h-6 text-primary-500" strokeWidth={1.5} />
+            </div>
+          </div>
+        </div>
+        <div className="flex-1">
+          <h1 className="text-3xl font-light text-neutral-50 tracking-tight leading-tight">
+            Escopo CIS v8.1 - IG2
+          </h1>
+          <p className="text-base text-neutral-400 font-light mt-1">
+            18 Controles de Segurança
+          </p>
+        </div>
+      </div>
+      {/* Conteúdo */}
+      <div className="flex-1 overflow-hidden min-h-0">
+        <div className="grid grid-cols-3 gap-3 h-full auto-rows-fr">
           {cisControls.map((control, index) => (
             <motion.div
               key={control.id}
@@ -274,7 +289,7 @@ function Slide04_Lista18Controles() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.03, duration: 0.3 }}
               className={`
-                relative flex flex-col p-3 rounded-xl border
+                relative flex flex-col p-2 rounded-lg border
                 backdrop-blur-sm transition-all duration-300 group
                 ${control.excluded 
                   ? 'bg-neutral-900/30 border-neutral-800/50 opacity-50 grayscale' 
@@ -286,7 +301,7 @@ function Slide04_Lista18Controles() {
             >
               {/* Número do controle */}
               <div className={`
-                absolute -top-2 -left-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold
+                absolute -top-1.5 -left-1.5 w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold
                 ${control.excluded 
                   ? 'bg-neutral-800 text-neutral-600' 
                   : control.worked
@@ -305,9 +320,9 @@ function Slide04_Lista18Controles() {
               )}
 
               {/* Conteúdo */}
-              <div className="flex-1 flex flex-col pt-5">
+              <div className="flex-1 flex flex-col pt-4">
                 <p className={`
-                  text-sm leading-snug font-medium flex-1
+                  text-xs leading-snug font-medium flex-1
                   ${control.excluded 
                     ? 'text-neutral-600' 
                     : control.worked
@@ -321,25 +336,25 @@ function Slide04_Lista18Controles() {
 
               {/* Indicador trabalhado */}
               {control.worked && !control.excluded && (
-                <div className="mt-2 pt-2 border-t border-primary-500/20">
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-primary-400" />
-                    <span className="text-xs text-primary-400 font-medium">Trabalhado</span>
+                <div className="mt-1.5 pt-1.5 border-t border-primary-500/20">
+                  <div className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-primary-400" />
+                    <span className="text-[10px] text-primary-400 font-medium">Trabalhado</span>
                   </div>
                 </div>
               )}
 
               {/* Indicador excluído */}
               {control.excluded && (
-                <div className="mt-2 pt-2 border-t border-neutral-800/50">
-                  <span className="text-xs text-neutral-600 font-medium">Excluído</span>
+                <div className="mt-1.5 pt-1.5 border-t border-neutral-800/50">
+                  <span className="text-[10px] text-neutral-600 font-medium">Excluído</span>
                 </div>
               )}
             </motion.div>
           ))}
         </div>
       </div>
-    </SlideLayout>
+    </div>
   )
 }
 
